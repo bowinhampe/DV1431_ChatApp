@@ -1,4 +1,4 @@
-package com.example.hampus.dv1431_chatapp
+package com.dv1431_chatapp
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
