@@ -3,7 +3,7 @@ package com.dv1431_chatapp
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -15,13 +15,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initializeGUIComponents() {
-        val btnLogin = findViewById<Button>(R.id.loginActivity_login_btn)
-        btnLogin.setOnClickListener {
+        loginActivity_login_btn.setOnClickListener {
             // Start the main app activity
             login()
         }
-        val mBtnRegister = findViewById<Button>(R.id.loginActivity_register_btn);
-        mBtnRegister.setOnClickListener {
+        loginActivity_register_btn.setOnClickListener {
             // Start a register Fragment
             register()
         }
