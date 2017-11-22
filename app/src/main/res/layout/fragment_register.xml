@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hampus.dv1431_chatapp.RegisterFragment">
+    android:background="@color/colorPrimary"
+    tools:context="com.dv1431_chatapp.RegisterFragment">
 
     <EditText
         android:layout_width="250dp"
@@ -36,5 +37,6 @@
         android:layout_below="@id/registerFragment_email_edtxt"
         android:text="@string/btn_register">
     </Button>
+
 
 </RelativeLayout>

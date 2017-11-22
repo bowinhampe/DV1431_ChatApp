@@ -12,5 +12,64 @@
        android:layout_height="match_parent"
        android:id="@+id/loginActivity_mainLayout">
 
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:id="@+id/loginActivity_loginLayout">
+
+         <TextView
+             android:layout_width="250dp"
+             android:layout_height="50dp"
+             android:text="@string/app_name"
+             android:textSize="25sp"
+             android:layout_centerInParent="true"
+             android:id="@+id/loginActivity_appname_txtview"
+             android:layout_above="@id/loginActivity_usrname_edtxt"
+             android:textAlignment="center">
+
+         </TextView>
+
+         <EditText
+             android:layout_width="250dp"
+             android:layout_height="50dp"
+             android:id="@+id/loginActivity_usrname_edtxt"
+             android:layout_above="@id/loginActivity_pw_edtxt"
+             android:text="@string/edtxt_usrname"
+             android:layout_centerInParent="true"/>
+
+         <EditText
+             android:layout_width="250dp"
+             android:layout_height="50dp"
+             android:id="@+id/loginActivity_pw_edtxt"
+             android:text="@string/edtxt_pw"
+             android:layout_centerInParent="true"/>
+
+         <Button
+             android:layout_width="250dp"
+             android:layout_height="50dp"
+             android:layout_centerInParent="true"
+             android:layout_below="@id/loginActivity_pw_edtxt"
+             android:id="@+id/loginActivity_login_btn"
+             android:text="@string/btn_login">
+         </Button>
+
+         <Button
+             android:layout_width="250dp"
+             android:layout_height="50dp"
+             android:layout_below="@id/loginActivity_login_btn"
+             android:layout_centerInParent="true"
+             android:id="@+id/loginActivity_register_btn"
+             android:text="@string/btn_register">
+         </Button>
+
+      </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:id="@+id/loginActivity_registerLayout">
+
+      </RelativeLayout>
+
    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
