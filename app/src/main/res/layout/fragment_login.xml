@@ -1,0 +1,62 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hampus.dv1431_chatapp.LoginFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:id="@+id/loginFragment_mainLayout">
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="@string/app_name"
+            android:textSize="25sp"
+            android:layout_centerInParent="true"
+            android:id="@+id/loginFragment_appname_txtview"
+            android:layout_above="@id/loginFragment_usrname_edtxt"
+            android:textAlignment="center">
+
+        </TextView>
+
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:id="@+id/loginFragment_usrname_edtxt"
+            android:text="@string/edtxt_usrname"
+            android:layout_centerInParent="true"/>
+
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:id="@+id/loginFragment_pw_edtxt"
+            android:text="@string/edtxt_pw"
+            android:layout_below="@id/loginFragment_usrname_edtxt"
+            android:layout_centerInParent="true"/>
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/loginFragment_pw_edtxt"
+            android:id="@+id/loginFragment_login_btn"
+            android:text="@string/btn_login">
+        </Button>
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/loginFragment_login_btn"
+            android:layout_centerInParent="true"
+            android:id="@+id/loginFragment_register_btn"
+            android:text="@string/btn_register">
+        </Button>
+
+    </RelativeLayout>
+
+
+</FrameLayout>
