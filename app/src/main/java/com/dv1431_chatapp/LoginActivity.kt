@@ -15,16 +15,6 @@ class LoginActivity : AppCompatActivity() {
         initiateGUIComponents()
     }
 
-    override fun onBackPressed() {
-        val fm = supportFragmentManager
-
-        if (fm.backStackEntryCount > 0) {
-            loginActivity_loginLayout.visibility = View.VISIBLE
-        }
-
-        super.onBackPressed()
-    }
-
     private fun initiateGUIComponents(){
         loginActivity_login_btn.setOnClickListener {
             // Start the main app activity
@@ -41,13 +31,8 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
     private fun register(){
-        loginActivity_loginLayout.visibility = View.INVISIBLE
-        val manager = supportFragmentManager
-        val transaction = manager.beginTransaction()
-        val registerFragment = RegisterFragment()
-        transaction.add(loginActivity_registerLayout.id, registerFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
     }
 
 }

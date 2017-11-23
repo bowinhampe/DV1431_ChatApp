@@ -1,24 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:context="com.dv1431_chatapp.RegisterFragment">
+    tools:context="com.dv1431_chatapp.RegisterActivity">
 
     <EditText
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:id="@+id/registerFragment_usrname_edtxt"
-        android:layout_above="@id/registerFragment_pw_edtxt"
+        android:id="@+id/registerActivity_usrname_edtxt"
+        android:layout_above="@id/registerActivity_pw_edtxt"
         android:inputType="text"
         android:text="@string/edtxt_usrname"/>
     <EditText
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:id="@+id/registerFragment_pw_edtxt"
-        android:layout_above="@id/registerFragment_email_edtxt"
+        android:id="@+id/registerActivity_pw_edtxt"
+        android:layout_above="@id/registerActivity_email_edtxt"
         android:inputType="text"
         android:text="@string/edtxt_pw"/>
 
@@ -26,17 +26,18 @@
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:id="@+id/registerFragment_email_edtxt"
+        android:id="@+id/registerActivity_email_edtxt"
         android:inputType="textEmailAddress"
         android:text="@string/edtxt_email"/>
     <Button
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:id="@+id/registerFragment_register_btn"
-        android:layout_below="@id/registerFragment_email_edtxt"
+        android:id="@+id/registerActivity_register_btn"
+        android:layout_below="@id/registerActivity_email_edtxt"
         android:text="@string/btn_register">
     </Button>
 
 
-</RelativeLayout>
+    </RelativeLayout>
+
