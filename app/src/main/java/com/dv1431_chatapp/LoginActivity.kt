@@ -3,7 +3,6 @@ package com.dv1431_chatapp
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import android.util.Log
@@ -14,10 +13,6 @@ class LoginActivity : AppCompatActivity() {
 
     // For logging
     private val TAG = LoginActivity::class.java.simpleName as String
-
-    companion object {
-        val EXTRAS_USER_ID = "userId"
-    }
 
     private lateinit var mAuth: FirebaseAuth
 
@@ -50,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
                         Log.d(TAG, "signInWithEmail:success")
                         val userId = mAuth.currentUser?.uid
                         val intent = Intent(this, MainActivity::class.java)
-                        intent.putExtra(EXTRAS_USER_ID, userId)
+                        intent.putExtra(MainActivity.EXTRAS_USER_ID, userId)
                         startActivity(intent)
                     } else {
                         // If sign in fails, display a message to the user.
