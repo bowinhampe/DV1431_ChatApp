@@ -3,8 +3,10 @@ package com.dv1431_chatapp
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat.startActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +16,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var groupList: Array<String>
+    lateinit var mGroupList: Array<String>
+    var mSelectedGroupNumber = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,25 +29,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun initiateGroupList() {
         // TODO: Hardcorded
-        groupList = arrayOf("Test1", "Test2", "Test3")
+        mGroupList = arrayOf("Test1", "Test2", "Test3")
     }
 
     private fun initiateGUIComponents() {
         val groupListView = mainActivity_grp_listView
-        groupListView.adapter = groupListAdapter(this, groupList)
+        groupListView.adapter = groupListAdapter(this, mGroupList)
         groupListView.onItemClickListener = groupListItemClickListener()
-
     }
 
-    private class groupListItemClickListener() : AdapterView.OnItemClickListener{
-
+    inner class groupListItemClickListener() : AdapterView.OnItemClickListener{
         override fun onItemClick(adapterView: AdapterView<*>?, view: View?, pos: Int, id: Long) {
             // TODO: Implement the specific group-interaction window to be started
-            println(pos)
+            startGroupInteractionActivity(pos)
         }
-}
+    }
 
-    private class groupListAdapter(context: Context, groupList: Array<String>) : BaseAdapter() {
+    fun startGroupInteractionActivity(groupId: Int){
+
+    }
+    inner class groupListAdapter(context: Context, groupList: Array<String>) : BaseAdapter() {
 
         private var groupList: Array<String>
         private val mInflator: LayoutInflater
@@ -83,10 +87,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private class ListRowHolder(row: View?) {
+    inner class ListRowHolder(row: View?) {
         public val label: TextView
         init {
             this.label = row?.findViewById<TextView>(R.id.label) as TextView
         }
     }
-}
+    }
