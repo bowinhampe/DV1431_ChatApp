@@ -40,13 +40,18 @@ class MainActivity : AppCompatActivity() {
 
     inner class groupListItemClickListener() : AdapterView.OnItemClickListener{
         override fun onItemClick(adapterView: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-            // TODO: Implement the specific group-interaction window to be started
             startGroupInteractionActivity(pos)
         }
     }
 
-    fun startGroupInteractionActivity(groupId: Int){
+    fun startGroupInteractionActivity(groupPos: Int){
+        // TODO: Use group "position" from listView click to create a chat window with the specified group.
+        // EXAMPLE CODE
+        var specifiedGroup = mGroupList.get(groupPos)
+        intent.putExtra("groupName", specifiedGroup)
 
+        val intent = Intent(this, GroupInteractionActivity::class.java)
+        startActivity(intent)
     }
     inner class groupListAdapter(context: Context, groupList: Array<String>) : BaseAdapter() {
 

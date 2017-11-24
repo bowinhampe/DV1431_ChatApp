@@ -11,6 +11,7 @@
         android:layout_width="200dp"
         android:layout_centerInParent="true"
         android:layout_alignParentTop="true"
+        android:textAlignment="center"
         android:text="@string/app_name"
         android:layout_marginTop="5dp"
         android:textSize="20sp"
@@ -42,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/groupInteraction_activity_mainFragment"
+        class = "com.dv1431_chatapp.ChatFragment"
         android:layout_below="@id/groupInteraction_activity_functionSpinner"
         android:layout_marginTop="15dp">
 

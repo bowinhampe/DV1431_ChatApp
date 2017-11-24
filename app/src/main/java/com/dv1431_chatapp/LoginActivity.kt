@@ -14,6 +14,7 @@ class LoginActivity : AppCompatActivity() {
 
     // For logging
     private val TAG = LoginActivity::class.java.simpleName as String
+    private val DEBUG_TAG = true
 
     companion object {
         val EXTRAS_USER_ID = "userId"
@@ -25,7 +26,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         initiateGUIComponents()
-        mAuth = FirebaseAuth.getInstance()
+
+        if(!DEBUG_TAG) {
+            mAuth = FirebaseAuth.getInstance()
+        }
     }
 
     private fun initiateGUIComponents(){
@@ -40,25 +44,31 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login() {
-        val email = loginActivity_usrname_edtxt.text.toString()
-        val password = loginActivity_pw_edtxt.text.toString()
+        if(!DEBUG_TAG) {
+            val email = loginActivity_usrname_edtxt.text.toString()
+            val password = loginActivity_pw_edtxt.text.toString()
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success")
-                        val userId = mAuth.currentUser?.uid
-                        val intent = Intent(this, MainActivity::class.java)
-                        intent.putExtra(EXTRAS_USER_ID, userId)
-                        startActivity(intent)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(this, "Authentication failed.",
-                                Toast.LENGTH_LONG).show()
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success")
+                            val userId = mAuth.currentUser?.uid
+                            val intent = Intent(this, MainActivity::class.java)
+                            intent.putExtra(EXTRAS_USER_ID, userId)
+                            startActivity(intent)
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.exception)
+                            Toast.makeText(this, "Authentication failed.",
+                                    Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
+        }
+        else{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun register(){

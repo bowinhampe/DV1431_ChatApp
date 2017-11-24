@@ -9,15 +9,24 @@ class GroupInteractionActivity : AppCompatActivity() {
 
     // Variable used to check wether map or chat is the active choice for the mode-button
     var mFragmentMode = false
+    var groupName = "Empty"
+    val mFragmentManager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_interaction)
+
+        // Todo: Catch groupname better
+        if (intent.extras != null){
+            groupName = intent.extras.getString("groupName")
+        }
+
         initializeGUIComponents()
         initiateChatFragment()
     }
 
     private fun initializeGUIComponents(){
+        groupInteraction_activity_groupName_txtView.text = groupName
         groupInteraction_activity_changeMode_btn.setOnClickListener{
             if(!mFragmentMode){
                 mFragmentMode = true
@@ -35,6 +44,10 @@ class GroupInteractionActivity : AppCompatActivity() {
 
     }
     private fun initiateChatFragment(){
-
+        val transaction = mFragmentManager.beginTransaction()
+        val fragment = ChatFragment()
+        transaction.replace(R.id.groupInteraction_activity_mainFragment, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
