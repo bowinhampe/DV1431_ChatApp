@@ -35,17 +35,18 @@ class ChatFragment:Fragment() {
 
      override fun onStart() {
          super.onStart()
-         initializeChat()
+         //initializeChat()
          initiateGUIComponents()
          chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
          chatFragment_input_chatBar.setSendClickListener(){
+             println("DEBUG_Clickedbutton")
              var chatMsg = ChatMessage(true,chatFragment_input_chatBar.messageText)
              mChatAdapter!!.add(chatMsg)
          }
 
      }
 
-    fun initializeChat(){
+    /*fun initializeChat(){
         // TODO Hardcoded Data
         var chatMsg = ChatMessage(true,"Hej")
         mData.add(chatMsg)
@@ -55,7 +56,7 @@ class ChatFragment:Fragment() {
         mData.add(chatMsg)
         chatMsg = ChatMessage(false ,"./Care.not")
         mData.add(chatMsg)
-    }
+    }*/
     fun initiateGUIComponents(){
         // Fetch and create List view for holding chat and its adapter
         mChatListView = chatFragment_msgWindow_listView
@@ -69,8 +70,9 @@ class ChatFragment:Fragment() {
 
     inner class listViewDataSetObserver():DataSetObserver(){
         override fun onChanged() {
-            super.onChanged()
             mChatListView!!.setSelection(mChatAdapter!!.count-1)
+            println(mChatAdapter!!.count-1)
+            super.onChanged()
         }
     }
 

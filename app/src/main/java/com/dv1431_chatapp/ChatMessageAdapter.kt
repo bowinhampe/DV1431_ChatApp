@@ -7,41 +7,32 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
-/**
- * Created by hampus on 2017-11-24.
- */
 class ChatMessageAdapter(private val getContext: Context, private val chatMessageID: Int, private val messages: ArrayList<ChatMessage> )
     :ArrayAdapter<ChatMessage>(getContext, chatMessageID, messages)
 {
+    override fun getCount(): Int {
+        return messages.size
+    }
     override fun add(msg: ChatMessage?) {
-        messages.add(msg!!)
         super.add(msg)
     }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
         val chatMsg = messages[position]
         var row = convertView
-        var Holder: ViewHolder
-        if(row == null) {
-            val inflater = (getContext as Activity).layoutInflater
 
-            if (chatMsg.left) {
-                row = inflater!!.inflate(R.layout.right_chat_element, parent, false)
-            } else {
-                row = inflater!!.inflate(R.layout.left_chat_element, parent, false)
-            }
+        val inflater = (getContext as Activity).layoutInflater
 
-            Holder = ViewHolder()
-            Holder.msg = row!!.findViewById<TextView>(R.id.msgr) as TextView
-
-            row.setTag(Holder)
-        }
-        else{
-            Holder = row.getTag() as ViewHolder
+        if (chatMsg.left) {
+            row = inflater!!.inflate(R.layout.right_chat_element, parent, false)
+        } else {
+            row = inflater!!.inflate(R.layout.left_chat_element, parent, false)
         }
 
-        Holder.msg!!.setText(chatMsg.msg)
+        var chatText = row!!.findViewById<TextView>(R.id.msgr)
+        chatText.text = chatMsg.msg
 
+        println("DEBUG_GetViewCall")
         return row
     }
     class ViewHolder
