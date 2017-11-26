@@ -35,10 +35,6 @@ class ChatMessageAdapter(private val getContext: Context, private val chatMessag
         println("DEBUG_GetViewCall")
         return row
     }
-    class ViewHolder
-    {
-        internal var msg : TextView? = null
-    }
     override fun getViewTypeCount(): Int {
         return super.getViewTypeCount()
     }

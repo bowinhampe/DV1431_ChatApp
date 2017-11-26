@@ -1,6 +1,7 @@
 package com.dv1431_chatapp
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_group_interaction.*
@@ -30,18 +31,22 @@ class GroupInteractionActivity : AppCompatActivity() {
         groupInteraction_activity_changeMode_btn.setOnClickListener{
             if(!mFragmentMode){
                 mFragmentMode = true
-                groupInteraction_activity_changeMode_btn.setBackgroundColor(Color.BLUE)
-                initiateChatFragment()
+                groupInteraction_activity_changeMode_btn.setBackgroundDrawable( getResources().getDrawable(R.drawable.icons_chat))
+                initiateMapFragment()
             }
             else{
                 mFragmentMode = false
-                groupInteraction_activity_changeMode_btn.setBackgroundColor(Color.GREEN)
-                initiateMapFragment()
+                groupInteraction_activity_changeMode_btn.setBackgroundDrawable( getResources().getDrawable(R.drawable.icons_globe))
+                initiateChatFragment()
             }
         }
     }
     private fun initiateMapFragment(){
-
+        val transaction = mFragmentManager.beginTransaction()
+        val fragment = MapFragment()
+        transaction.replace(R.id.groupInteraction_activity_mainFragment, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
     private fun initiateChatFragment(){
         val transaction = mFragmentManager.beginTransaction()

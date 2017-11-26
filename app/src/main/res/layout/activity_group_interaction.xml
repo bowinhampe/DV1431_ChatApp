@@ -31,7 +31,7 @@
     <Button
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@mipmap/ic_launcher_round"
+        android:background="@drawable/icons_globe"
         android:id="@+id/groupInteraction_activity_changeMode_btn"
         android:layout_below="@id/groupInteraction_activity_groupName_txtView"
         android:layout_toRightOf="@id/groupInteraction_activity_functionSpinner"
