@@ -1,18 +1,19 @@
 package com.dv1431_chatapp
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.startActivity
+import android.Manifest
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.dv1431_chatapp.R.layout.grouplist_row
+import com.karumi.dexter.Dexter
 import kotlinx.android.synthetic.main.activity_main.*
+import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,11 +23,24 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        requestPermission()
         val userId: String? = if (intent.extras != null) intent.extras.getString(LoginActivity.EXTRAS_USER_ID) else null
         initiateGroupList()
         initiateGUIComponents()
     }
 
+
+    private fun requestPermission(){
+        val dialogMultiplePermissionsListener = DialogOnAnyDeniedMultiplePermissionsListener.Builder
+                .withContext(this)
+                .withTitle("GPS permission")
+                .build()
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.ACCESS_FINE_LOCATION
+                                ,Manifest.permission.ACCESS_COARSE_LOCATION)
+                .withListener(dialogMultiplePermissionsListener)
+                .check()
+    }
     private fun initiateGroupList() {
         // TODO: Hardcorded
         mGroupList = arrayOf("Test1", "Test2", "Test3")
