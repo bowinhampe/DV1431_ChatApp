@@ -5,24 +5,9 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_register.*
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.AuthResult
-import com.google.android.gms.tasks.Task
-import android.support.annotation.NonNull
-import com.google.android.gms.tasks.OnCompleteListener
-import android.R.attr.password
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import android.R.attr.password
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.DatabaseReference
-
-
-
-
-
-
-
 
 class RegisterActivity : AppCompatActivity() {
 

@@ -20,6 +20,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         initiateGUIComponents()
+
         mAuth = FirebaseAuth.getInstance()
     }
 
@@ -53,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this, "Authentication failed.",
                                 Toast.LENGTH_LONG).show()
                     }
-                }
+        }
     }
 
     private fun register(){
