@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val userId: String? = if (intent.extras != null) intent.extras.getString(EXTRAS_USER_ID) else null
+        //val userId: String? = if (intent.extras != null) intent.extras.getString(EXTRAS_USER_ID) else null
+        val user: User = intent.getSerializableExtra(User::class.java.simpleName) as User
     }
 }
