@@ -80,9 +80,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
 
     }
 
-    private var REQUEST_LOCATION_CODE = 1
-
-
     override fun onConnectionSuspended(p0: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
