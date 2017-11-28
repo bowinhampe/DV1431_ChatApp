@@ -1,4 +1,4 @@
-package com.dv1431_chatapp
+package com.dv1431_chatapp.database
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

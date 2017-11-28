@@ -1,13 +1,14 @@
-package com.dv1431_chatapp
+package com.dv1431_chatapp.database
 
 import android.util.Log
+import com.dv1431_chatapp.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class Database {
+class DatabaseHandler {
 
     // For logging
     private val TAG = LoginActivity::class.java.simpleName as String

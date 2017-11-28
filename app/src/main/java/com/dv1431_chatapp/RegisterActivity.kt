@@ -5,7 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_register.*
 import android.widget.Toast
-import android.util.Log
+import com.dv1431_chatapp.database.DatabaseHandler
+import com.dv1431_chatapp.database.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -40,7 +41,7 @@ class RegisterActivity : AppCompatActivity() {
 
         val context = this
 
-        Database().register(email, password, username, object : OnCompleteListener{
+        DatabaseHandler().register(email, password, username, object : OnCompleteListener {
             override fun onStart() {
 
             }
