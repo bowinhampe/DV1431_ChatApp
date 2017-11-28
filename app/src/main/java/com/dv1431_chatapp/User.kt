@@ -36,4 +36,21 @@ class User() : Serializable {
     fun getGroups(): MutableList<String> {
         return mGroups
     }
+
+    @Exclude
+    fun setId(id: String) {
+        mId = id
+    }
+
+    fun setEmail(email: String) {
+        mEmail = email
+    }
+
+    fun setUsername(username: String) {
+        mUsername = username
+    }
+
+    fun setGroups(groups: MutableList<String>) {
+        mGroups = groups
+    }
 }
