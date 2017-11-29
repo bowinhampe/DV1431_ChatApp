@@ -6,6 +6,7 @@
     <string name="edtxt_pw">Password ...</string>
     <string name="edtxt_email">Email ...</string>
     <string name="btn_create_grp">Create group</string>
+    <string name="edtxt_group_name">Group name...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

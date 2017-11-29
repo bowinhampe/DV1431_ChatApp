@@ -34,14 +34,16 @@
              android:layout_height="50dp"
              android:id="@+id/loginActivity_usrname_edtxt"
              android:layout_above="@id/loginActivity_pw_edtxt"
-             android:text="@string/edtxt_usrname"
+             android:hint="@string/edtxt_email"
+             android:text="asd@asd.asd"
              android:layout_centerInParent="true"/>
 
          <EditText
              android:layout_width="250dp"
              android:layout_height="50dp"
+             android:hint="@string/edtxt_pw"
              android:id="@+id/loginActivity_pw_edtxt"
-             android:text="@string/edtxt_pw"
+             android:text="asdasd"
              android:layout_centerInParent="true"/>
 
          <Button

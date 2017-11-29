@@ -14,8 +14,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDDPeG4-VpJRfu5FFy0XNsav7yV-HLpRIg"/>
-
+            android:value="AIzaSyDDPeG4-VpJRfu5FFy0XNsav7yV-HLpRIg" />
 
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -27,6 +26,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".GroupInteractionActivity" />
+        <activity android:name=".CreateGroup"></activity>
     </application>
 
 </manifest>
