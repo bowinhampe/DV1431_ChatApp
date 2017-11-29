@@ -11,29 +11,29 @@
         android:layout_centerInParent="true"
         android:id="@+id/registerActivity_usrname_edtxt"
         android:layout_above="@id/registerActivity_pw_edtxt"
-        android:text="@string/edtxt_usrname"/>
+        android:hint="@string/edtxt_usrname" />
     <EditText
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:id="@+id/registerActivity_pw_edtxt"
-        android:layout_above="@id/registerActivity_email_edtxt"
         android:inputType="text"
-        android:text="@string/edtxt_pw"/>
+        android:hint="@string/edtxt_pw"/>
 
     <EditText
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
+        android:layout_above="@id/registerActivity_usrname_edtxt"
         android:id="@+id/registerActivity_email_edtxt"
         android:inputType="textEmailAddress"
-        android:text="@string/edtxt_email"/>
+        android:hint="@string/edtxt_email"/>
     <Button
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:id="@+id/registerActivity_register_btn"
-        android:layout_below="@id/registerActivity_email_edtxt"
+        android:layout_below="@id/registerActivity_pw_edtxt"
         android:text="@string/btn_register">
     </Button>
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.dv1431_chatapp.CreateGroup">
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:hint="@string/edtxt_group_name"
+        android:id="@+id/createGroupActivity_grpName_edtxt">
+
+    </EditText>
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@id/createGroupActivity_grpName_edtxt"
+        android:layout_alignLeft="@id/createGroupActivity_grpName_edtxt"
+        android:layout_below="@id/createGroupActivity_grpName_edtxt"
+        android:layout_marginTop="10dp"
+        android:hint="@string/edtxt_email"
+        android:id="@+id/createGroupActivity_userEmail_edtxt">
+
+    </EditText>
+
+    <Button
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        android:layout_alignEnd="@id/createGroupActivity_grpName_edtxt"
+        android:layout_alignRight="@id/createGroupActivity_grpName_edtxt"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/createGroupActivity_grpName_edtxt"
+        android:id="@+id/createGroupActivity_addUser_btn"
+        android:background="@drawable/icons_plus">
+
+    </Button>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/createGroupActivity_addUser_btn"
+        android:layout_centerInParent="true"
+        android:textAlignment="center"
+        android:id="@+id/createGroupActivity_usersInGroup_listView"
+        android:layout_marginTop="25dp"/>
+
+    <Button
+        android:layout_height="50dp"
+        android:layout_width="250dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/createGroupActivity_createGrp_btn"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+        android:text="@string/btn_create_grp">
+
+    </Button>
+
+
+</RelativeLayout>

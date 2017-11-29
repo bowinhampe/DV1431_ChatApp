@@ -41,6 +41,11 @@ class MainActivity : AppCompatActivity() {
                 .withListener(dialogMultiplePermissionsListener)
                 .check()
     }
+
+    private fun initiateCreateGroup(){
+        val intent = Intent(this, CreateGroup::class.java)
+        startActivity(intent)
+    }
     private fun initiateGroupList() {
         // TODO: Hardcorded
         mGroupList = arrayOf("Test1", "Test2", "Test3")
@@ -50,6 +55,9 @@ class MainActivity : AppCompatActivity() {
         val groupListView = mainActivity_grp_listView
         groupListView.adapter = groupListAdapter(this, mGroupList)
         groupListView.onItemClickListener = groupListItemClickListener()
+        mainActivity_create_grp_btn.setOnClickListener{
+            initiateCreateGroup()
+        }
     }
 
     inner class groupListItemClickListener() : AdapterView.OnItemClickListener{
