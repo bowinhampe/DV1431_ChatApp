@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.dv1431_chatapp.database.User
 import com.karumi.dexter.Dexter
 import kotlinx.android.synthetic.main.activity_main.*
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener

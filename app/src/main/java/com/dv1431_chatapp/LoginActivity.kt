@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.dv1431_chatapp.database.DatabaseHandler
 import com.dv1431_chatapp.database.OnCompleteListener
 import com.dv1431_chatapp.database.OnDataChangeListener
+import com.dv1431_chatapp.database.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DatabaseError
