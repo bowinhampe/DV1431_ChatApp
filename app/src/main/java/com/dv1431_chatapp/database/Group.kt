@@ -11,6 +11,7 @@ class Group() : Serializable {
     private lateinit var mGroupName: String
 
     constructor(groupId: String, groupName: String = "N/A") : this() {
-
+        mGroupId = groupId
+        mGroupName = groupName
     }
 }
