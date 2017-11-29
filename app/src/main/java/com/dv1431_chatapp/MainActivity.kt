@@ -13,18 +13,15 @@ import com.karumi.dexter.Dexter
 import kotlinx.android.synthetic.main.activity_main.*
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener
 
-
-
 class MainActivity : AppCompatActivity() {
-
     lateinit var mGroupList: Array<String>
     var mSelectedGroupNumber = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val user: User = intent.getSerializableExtra(User::class.java.simpleName) as User
         requestPermission()
-        val userId: String? = if (intent.extras != null) intent.extras.getString(LoginActivity.EXTRAS_USER_ID) else null
         initiateGroupList()
         initiateGUIComponents()
     }
@@ -46,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, CreateGroup::class.java)
         startActivity(intent)
     }
+
     private fun initiateGroupList() {
         // TODO: Hardcorded
         mGroupList = arrayOf("Test1", "Test2", "Test3")
@@ -75,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, GroupInteractionActivity::class.java)
         startActivity(intent)
     }
+
     inner class groupListAdapter(context: Context, groupList: Array<String>) : BaseAdapter() {
 
         private var groupList: Array<String>
@@ -120,4 +119,4 @@ class MainActivity : AppCompatActivity() {
             this.label = row?.findViewById<TextView>(R.id.label) as TextView
         }
     }
-    }
+}
