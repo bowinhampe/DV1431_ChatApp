@@ -7,13 +7,20 @@ import java.io.Serializable
  * Created by dane on 11/27/17.
  */
 
-class User() : Serializable {
+class User : Serializable {
     private lateinit var mId: String
     private lateinit var mEmail: String
     private lateinit var mUsername: String
-    private lateinit var mGroups: MutableList<String>
+    private lateinit var mGroups: ArrayList<String>
 
-    constructor(id: String, email: String, username: String, groups: MutableList<String> = ArrayList()) : this() {
+    constructor() {
+        mId = "N/A"
+        mEmail = "N/A"
+        mUsername = "N/A"
+        mGroups = ArrayList()
+    }
+
+    constructor(id: String, email: String, username: String, groups: ArrayList<String> = ArrayList()) {
         mId = id
         mEmail = email
         mUsername = username
@@ -33,7 +40,7 @@ class User() : Serializable {
         return mUsername
     }
 
-    fun getGroups(): MutableList<String> {
+    fun getGroups(): ArrayList<String> {
         return mGroups
     }
 
@@ -50,7 +57,7 @@ class User() : Serializable {
         mUsername = username
     }
 
-    fun setGroups(groups: MutableList<String>) {
+    fun setGroups(groups: ArrayList<String>) {
         mGroups = groups
     }
 }

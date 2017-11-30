@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateCreateGroup(){
-        val intent = Intent(this, CreateGroup::class.java)
+        val intent = Intent(this, CreateGroupActivity::class.java)
         startActivity(intent)
     }
 

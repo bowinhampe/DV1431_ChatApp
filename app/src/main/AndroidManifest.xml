@@ -26,7 +26,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".GroupInteractionActivity" />
-        <activity android:name=".CreateGroup"></activity>
+        <activity android:name=".CreateGroupActivity"></activity>
     </application>
 
 </manifest>

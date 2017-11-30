@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="com.dv1431_chatapp.CreateGroup">
+    tools:context="com.dv1431_chatapp.CreateGroupActivity">
 
     <EditText
         android:layout_width="250dp"
