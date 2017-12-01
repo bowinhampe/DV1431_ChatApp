@@ -3,6 +3,7 @@ package com.dv1431_chatapp
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_create_group.*
 
 class CreateGroup : AppCompatActivity() {
@@ -34,8 +36,17 @@ class CreateGroup : AppCompatActivity() {
         mGroupAdapter = UserListAdapter(this, createGroupActivity_usersInGroup_listView.id, mUserList)
         mGroupListView!!.adapter = mGroupAdapter
         createGroupActivity_addUser_btn.setOnClickListener{
-            addUserToList()
+            findUser()
         }
+    }
+
+    private fun findUser() {
+        val userEmail = createGroupActivity_userEmail_edtxt.text.toString()
+        val userRecord = FirebaseAuth.getInstance().fetchProvidersForEmail(userEmail)
+
+       if(userRecord.isSuccessful())
+           if (userRecord.getResult().providers?.size!! > 0)
+               addUserToList(userEmail)
     }
 
 
