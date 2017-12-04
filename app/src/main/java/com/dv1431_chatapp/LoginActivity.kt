@@ -76,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onChange(dataSnapshot: DataSnapshot) {
-                val user = dataSnapshot.getValue<User>(User::class.java)//.getValue(User::class.java)
+                val user = dataSnapshot.getValue<User>(User::class.java)
                 if (user != null) {
                     user.setId(dataSnapshot.key)
                     val intent = Intent(context, MainActivity::class.java)
@@ -85,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                 } else {
                     Log.w(TAG, "retrieveUserFromDatabase:failure")
-                    Toast.makeText(context, "An error occurred. PLease try again.",
+                    Toast.makeText(context, "An error occurred. Please try again.",
                             Toast.LENGTH_LONG).show()
                 }
             }
