@@ -13,6 +13,10 @@ import com.dv1431_chatapp.database.User
 import com.karumi.dexter.Dexter
 import kotlinx.android.synthetic.main.activity_main.*
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ChildEventListener
 
 class MainActivity : AppCompatActivity() {
     lateinit var mGroupList: ArrayList<String>
@@ -23,11 +27,48 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
+        addUserGroupsEventListener()
         requestPermission()
         initiateGroupList()
         initiateGUIComponents()
     }
 
+    private fun addUserGroupsEventListener() {
+        // Get a reference to our posts
+        val ref = FirebaseDatabase.getInstance().getReference("users").child(mUser.getId()).child("groups")
+
+        ref.addChildEventListener(object : ChildEventListener {
+            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            // Retrieve new posts as they are added to the database
+            override fun onChildAdded(dataSnapshot: DataSnapshot?, previousChildKey: String?) {
+                val groupId = dataSnapshot?.key
+                if (groupId != null) {
+                    if (!mUser.getGroups().containsKey(groupId)) {
+                        mUser.getGroups().put(groupId, "N/A")
+                        // Get group name
+                    }
+                } else
+                    println("NULL")
+            }
+
+            // Get the data on a post that has been removed
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
+                val title = dataSnapshot.child("title").value as String?
+                // Remove group from list
+            }
+
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+    }
 
     private fun requestPermission(){
         val dialogMultiplePermissionsListener = DialogOnAnyDeniedMultiplePermissionsListener.Builder
@@ -49,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initiateGroupList() {
         // TODO: Get group names from db
-        mGroupList = mUser.getGroups().keys.toList() as ArrayList<String>
+        mGroupList = ArrayList()
     }
 
     private fun initiateGUIComponents() {
