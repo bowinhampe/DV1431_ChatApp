@@ -15,13 +15,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener
 
 class MainActivity : AppCompatActivity() {
-    lateinit var mGroupList: Array<String>
+    lateinit var mGroupList: ArrayList<String>
+    private lateinit var mUser: User
     var mSelectedGroupNumber = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val user: User = intent.getSerializableExtra(User::class.java.simpleName) as User
+        mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
         requestPermission()
         initiateGroupList()
         initiateGUIComponents()
@@ -42,12 +43,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun initiateCreateGroup(){
         val intent = Intent(this, CreateGroupActivity::class.java)
+        intent.putExtra(User::class.java.simpleName, mUser)
         startActivity(intent)
     }
 
     private fun initiateGroupList() {
-        // TODO: Hardcorded
-        mGroupList = arrayOf("Test1", "Test2", "Test3")
+        // TODO: Get group names from db
+        mGroupList = mUser.getGroups().keys.toList() as ArrayList<String>
     }
 
     private fun initiateGUIComponents() {
@@ -75,9 +77,9 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    inner class groupListAdapter(context: Context, groupList: Array<String>) : BaseAdapter() {
+    inner class groupListAdapter(context: Context, groupList: ArrayList<String>) : BaseAdapter() {
 
-        private var groupList: Array<String>
+        private var groupList: ArrayList<String>
         private val mInflator: LayoutInflater
 
         init {

@@ -77,7 +77,6 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onChange(dataSnapshot: DataSnapshot) {
                 val user = dataSnapshot.getValue<User>(User::class.java)//.getValue(User::class.java)
-
                 if (user != null) {
                     user.setId(dataSnapshot.key)
                     val intent = Intent(context, MainActivity::class.java)
