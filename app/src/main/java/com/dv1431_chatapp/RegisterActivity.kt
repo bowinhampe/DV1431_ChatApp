@@ -64,8 +64,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun addUserToDatabase(user: User) {
-        val usersRef = FirebaseDatabase.getInstance().getReference("users")
-        usersRef.child(user.getId()).setValue(user)
+        FirebaseDatabase.getInstance().getReference("users").child(user.getId()).setValue(user)
     }
 
 }
