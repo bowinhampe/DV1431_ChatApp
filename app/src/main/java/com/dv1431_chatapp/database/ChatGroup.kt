@@ -3,27 +3,27 @@ package com.dv1431_chatapp.database
 import com.google.firebase.database.Exclude
 
 class ChatGroup : Group {
-    private var mUserIds: ArrayList<String>
+    private var mUserIds: IdMap
     private var mMessages: ArrayList<Message>
 
     constructor() : super() {
-        mUserIds = ArrayList()
+        mUserIds = IdMap()
         mMessages = ArrayList()
     }
 
-    constructor(groupId: String, groupName: String, users: ArrayList<String> = ArrayList(), messages: ArrayList<Message> = ArrayList()) : super(groupId, groupName) {
+    constructor(groupId: String, groupName: String, users: IdMap = IdMap(), messages: ArrayList<Message> = ArrayList()) : super(groupId, groupName) {
         mUserIds = users
         mMessages = messages
     }
 
     @Exclude
     fun addUser(user: String) {
-        mUserIds.add(user)
+        mUserIds.put(user, "N/A")
     }
 
     @Exclude
-    fun removeUser(user: String) : Boolean {
-        return mUserIds.remove(user)
+    fun removeUser(userId: String) : Any? {
+        return mUserIds.remove(userId)
     }
 
     @Exclude
@@ -36,7 +36,7 @@ class ChatGroup : Group {
         return mMessages.remove(message)
     }
 
-    fun getUsers() : ArrayList<String> {
+    fun getUsers() : IdMap {
         return mUserIds
     }
 
@@ -44,7 +44,7 @@ class ChatGroup : Group {
         return mMessages
     }
 
-    fun setUsers(users: ArrayList<String>) {
+    fun setUsers(users: IdMap) {
         mUserIds = users
     }
 

@@ -7,20 +7,20 @@ class User : Serializable {
     private lateinit var mId: String
     private lateinit var mEmail: String
     private lateinit var mUsername: String
-    private lateinit var mGroups: Map<String, String>
+    private lateinit var mGroupIds: IdMap
 
     constructor() {
         mId = "N/A"
         mEmail = "N/A"
         mUsername = "N/A"
-        mGroups = HashMap()
+        mGroupIds = IdMap()
     }
 
-    constructor(id: String, email: String, username: String, groups: Map<String, String> = HashMap()) {
+    constructor(id: String, email: String, username: String, groupIds: IdMap = IdMap()) {
         mId = id
         mEmail = email
         mUsername = username
-        mGroups = groups
+        mGroupIds = groupIds
     }
 
     @Exclude
@@ -36,8 +36,8 @@ class User : Serializable {
         return mUsername
     }
 
-    fun getGroups(): Map<String, String> {
-        return mGroups
+    fun getGroups(): IdMap {
+        return mGroupIds
     }
 
     @Exclude
@@ -53,7 +53,7 @@ class User : Serializable {
         mUsername = username
     }
 
-    fun setGroups(groups: Map<String, String>) {
-        mGroups = groups
+    fun setGroups(groupIds: IdMap) {
+        mGroupIds = groupIds
     }
 }
