@@ -4,10 +4,10 @@ import com.google.firebase.database.Exclude
 import java.io.Serializable
 
 class User : Serializable {
-    private lateinit var mId: String
-    private lateinit var mEmail: String
-    private lateinit var mUsername: String
-    private lateinit var mGroupIds: IdMap
+    private var mId: String
+    private var mEmail: String
+    private var mUsername: String
+    private var mGroupIds: IdMap
 
     constructor() {
         mId = "N/A"
@@ -53,7 +53,7 @@ class User : Serializable {
         mUsername = username
     }
 
-    fun setGroups(groupIds: IdMap) {
-        mGroupIds = groupIds
+    fun setGroups(groupIds: HashMap<String, Any>) {
+        mGroupIds.putAll(groupIds)
     }
 }

@@ -1,17 +1,10 @@
 package com.dv1431_chatapp.database
 
 import com.google.firebase.database.Exclude
-import android.R.attr.keySet
 
+class IdMap() : HashMap<String, Any>() {
 
-
-class IdMap : HashMap<String, Any> {
-
-    constructor() {
-
-    }
-
-    constructor(key : String, value: Any) {
+    constructor(key: String, value: Any) : this () {
         this.put(key, value)
     }
 

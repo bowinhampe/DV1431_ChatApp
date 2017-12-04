@@ -25,14 +25,35 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mUser: User
     var mSelectedGroupNumber = -1
 
+    private val mRetrieveGroupListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+            // Get group from user's group list
+            val group = dataSnapshot.getValue<Group>(Group::class.java)
+            if (group != null) {
+                mGroupList.add(group.getName())
+                
+                // RE-paint the buttons
+                initiateGUIComponents()
+            } else {
+                // TODO: Toast an error occurred
+            }
+
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            // TODO: database error
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
-        addUserGroupsEventListener()
-        mGroupList = ArrayList<String>()
-        requestPermission()
+        mGroupList = ArrayList()
         initiateGroupList()
+        addUserGroupsEventListener()
+        requestPermission()
         initiateGUIComponents()
     }
 
@@ -49,13 +70,12 @@ class MainActivity : AppCompatActivity() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            // Retrieve new posts as they are added to the database
+            // Retrieve the group id of the group that a user is added to
             override fun onChildAdded(dataSnapshot: DataSnapshot?, previousChildKey: String?) {
                 val groupId = dataSnapshot?.key
                 if (groupId != null) {
                     if (!mUser.getGroups().containsKey(groupId)) {
-                        mUser.getGroups().put(groupId, "N/A")
-                        // Get group name
+                        retrieveGroup(groupId)
                     }
                 } else
                     println("NULL")
@@ -91,28 +111,15 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun retrieveGroup(groupId: String) {
+        FirebaseDatabase.getInstance().getReference("groups").child(groupId).addListenerForSingleValueEvent(mRetrieveGroupListener)
+    }
+
     private fun initiateGroupList() {
-        // Create listener
-        val valueEventListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                // Get group from user's group list
-                val group = dataSnapshot.getValue<Group>(Group::class.java)
-                mGroupList.add(group?.getName() as String)
-
-                // RE-paint the buttons
-                initiateGUIComponents()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // TODO: database error
-            }
-        }
-
         // TODO: limit listener to groups where the user has access to
         for (grp in mUser.getGroups()) {
             // Add listener for every group the user is in
-            FirebaseDatabase.getInstance().getReference("groups").child(grp.key).addListenerForSingleValueEvent(valueEventListener)
+            retrieveGroup(grp.key)
         }
     }
 
