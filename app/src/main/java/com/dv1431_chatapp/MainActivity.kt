@@ -9,13 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.dv1431_chatapp.database.Group
 import com.dv1431_chatapp.database.User
-import com.karumi.dexter.Dexter
-import kotlinx.android.synthetic.main.activity_main.*
-import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.karumi.dexter.Dexter
+import kotlinx.android.synthetic.main.activity_main.*
+import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener
 import com.google.firebase.database.ChildEventListener
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
         addUserGroupsEventListener()
+        mGroupList = ArrayList<String>()
         requestPermission()
         initiateGroupList()
         initiateGUIComponents()
@@ -89,15 +92,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateGroupList() {
-        // TODO: Get group names from db
-        mGroupList = ArrayList()
+        // Create listener
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                // Get group from user's group list
+                val group = dataSnapshot.getValue<Group>(Group::class.java)
+                mGroupList.add(group?.getName() as String)
+
+                // RE-paint the buttons
+                initiateGUIComponents()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // TODO: database error
+            }
+        }
+
+        // TODO: limit listener to groups where the user has access to
+        for (grp in mUser.getGroups()) {
+            // Add listener for every group the user is in
+            FirebaseDatabase.getInstance().getReference("groups").child(grp.key).addListenerForSingleValueEvent(valueEventListener)
+        }
     }
 
     private fun initiateGUIComponents() {
         val groupListView = mainActivity_grp_listView
         groupListView.adapter = groupListAdapter(this, mGroupList)
         groupListView.onItemClickListener = groupListItemClickListener()
-        mainActivity_create_grp_btn.setOnClickListener{
+        mainActivity_create_grp_btn.setOnClickListener {
             initiateCreateGroup()
         }
     }
