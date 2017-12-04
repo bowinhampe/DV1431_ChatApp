@@ -3,24 +3,20 @@ package com.dv1431_chatapp.database
 import com.google.firebase.database.Exclude
 import java.io.Serializable
 
-/**
- * Created by dane on 11/27/17.
- */
-
 class User : Serializable {
     private lateinit var mId: String
     private lateinit var mEmail: String
     private lateinit var mUsername: String
-    private lateinit var mGroups: ArrayList<String>
+    private lateinit var mGroups: Map<String, String>
 
     constructor() {
         mId = "N/A"
         mEmail = "N/A"
         mUsername = "N/A"
-        mGroups = ArrayList()
+        mGroups = HashMap()
     }
 
-    constructor(id: String, email: String, username: String, groups: ArrayList<String> = ArrayList()) {
+    constructor(id: String, email: String, username: String, groups: Map<String, String> = HashMap()) {
         mId = id
         mEmail = email
         mUsername = username
@@ -40,7 +36,7 @@ class User : Serializable {
         return mUsername
     }
 
-    fun getGroups(): ArrayList<String> {
+    fun getGroups(): Map<String, String> {
         return mGroups
     }
 
@@ -57,7 +53,7 @@ class User : Serializable {
         mUsername = username
     }
 
-    fun setGroups(groups: ArrayList<String>) {
+    fun setGroups(groups: Map<String, String>) {
         mGroups = groups
     }
 }
