@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             val group = dataSnapshot.getValue<Group>(Group::class.java)
             if (group != null) {
                 mGroupList.add(group.getName())
-                
+
                 // RE-paint the buttons
                 initiateGUIComponents()
             } else {
@@ -116,7 +116,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateGroupList() {
-        // TODO: limit listener to groups where the user has access to
         for (grp in mUser.getGroups()) {
             // Add listener for every group the user is in
             retrieveGroup(grp.key)
