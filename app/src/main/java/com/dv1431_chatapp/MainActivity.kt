@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
             if (group != null) {
                 group.setId(dataSnapshot.key)
                 mGroups.add(group)
-
                 // RE-paint the buttons
                 // TODO: should not repaint after every group add
                 initiateGUIComponents()
