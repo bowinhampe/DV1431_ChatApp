@@ -2,46 +2,69 @@ package com.dv1431_chatapp
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ListView
+import android.widget.Toast
 import com.dv1431_chatapp.database.ChatGroup
 import com.dv1431_chatapp.database.IdMap
 import com.dv1431_chatapp.database.User
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_create_group.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.ValueEventListener
 
 class CreateGroupActivity : AppCompatActivity() {
-
-    private var mGroupListView: ListView? = null
-    private var mGroupAdapter: UserListAdapter? = null
+    private lateinit var mUserAdapter: UserListAdapter
     private lateinit var mUserList: ArrayList<String>
     private lateinit var mUserIds: IdMap
     private lateinit var mUser: User
+
+    private lateinit var mRetrieveUserIdListener: ValueEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_group)
         initiateGUIComponents()
-        mUserIds = IdMap()
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
+        mUserIds = IdMap()
         mUserIds.put(mUser.getId(), "N/A")
+
+        val context = this
+        mRetrieveUserIdListener = object: ValueEventListener {
+
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot?) {
+                if (snapshot?.value != null) {
+                    snapshot.children.forEach {
+                        mUserIds.put(it.key, "N/A")
+                        if (it.value is HashMap<*, *>) {
+                            val hashMap = it.value as HashMap<String, String>
+                            mUserList.add(hashMap.getValue("email"))
+                        }
+                    }
+                } else {
+                    Toast.makeText(context, "User not found.",
+                            Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
-    // conny tar en edtxt string, skickar upp o kollar om den finns, och då lägger han den i mUserList, sedan skapar ni grp med
-    //grp name och alla users i listen, för dom är guaranteed finnas
+    private fun addUser() {
+        val userEmail = createGroupActivity_userEmail_edtxt.text.toString()
 
-    private fun addUser(userId: String) {
-        mUserIds.put(userId, "N/A")
-        // TODO: Check if user exist and use the ADD below, Else write a "Toast"
-        mGroupAdapter!!.add(userId)
+        // Query user email and if exists retrieve user id
+        val userQueryRef = FirebaseDatabase.getInstance().getReference("users").orderByChild("email").equalTo(userEmail)
+        userQueryRef.addListenerForSingleValueEvent(mRetrieveUserIdListener)
     }
 
     private fun initiateGUIComponents(){
-        mUserList = ArrayList<String>()
-        mGroupListView = createGroupActivity_usersInGroup_listView
-        mGroupAdapter = UserListAdapter(this, createGroupActivity_usersInGroup_listView.id, mUserList)
-        mGroupListView!!.adapter = mGroupAdapter
+        mUserList = ArrayList()
+        mUserAdapter = UserListAdapter(this, createGroupActivity_usersInGroup_listView.id, mUserList)
+        createGroupActivity_usersInGroup_listView.adapter = mUserAdapter
         createGroupActivity_addUser_btn.setOnClickListener{
-            addUser("example")
+            addUser()
         }
         createGroupActivity_createGrp_btn.setOnClickListener {
             createGroup()
@@ -60,9 +83,8 @@ class CreateGroupActivity : AppCompatActivity() {
         // Add group to the generated group id
         newGroupRef.setValue(group)
 
-        val groupId = IdMap(newGroupRef.key, "N/A")
-
         // Add groupId to assigned users
+        val groupId = IdMap(newGroupRef.key, "N/A")
         val usersRef = FirebaseDatabase.getInstance().getReference("users")
         mUserIds.forEach {
             usersRef.child(it.key).child("groups").updateChildren(groupId)
