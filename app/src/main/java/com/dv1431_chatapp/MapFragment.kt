@@ -1,6 +1,7 @@
 package com.dv1431_chatapp
 
 import android.content.Context
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 
@@ -9,29 +10,38 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dv1431_chatapp.database.Message
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_map.*
+import com.google.maps.android.ui.IconGenerator
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+
+
+
+
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     // Map objects
-    private var mMap: GoogleMap? = null
+    private lateinit var mMap: GoogleMap
     private var mClient: GoogleApiClient? = null
     private var mLocationRequest: LocationRequest? = null
     private var mLastLocation: Location? = null
     private var mCurrentLocationMarker: Marker? = null
     private val mFragmentManager = SupportMapFragment()
 
+    private lateinit var mIconGenerator:  IconGenerator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mIconGenerator = IconGenerator(context)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -54,8 +64,22 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
         super.onDetach()
     }
 
-    override fun onMapReady(p0: GoogleMap?) {
-        mMap = p0
+    private fun addIcon(iconGenerator: IconGenerator, userName: String, message: String, position: LatLng) {
+        val markerOptions = MarkerOptions()
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(userName)))
+        markerOptions.position(position)
+        markerOptions.anchor(iconGenerator.anchorU, iconGenerator.anchorV)
+        markerOptions.snippet(message)
+        mMap.addMarker(markerOptions)?.showInfoWindow()
+    }
+
+    override fun onMapReady(map: GoogleMap?) {
+        if (map != null) {
+            mMap = map
+
+            // Add user locations
+            addIcon(mIconGenerator, "User", "Message", LatLng(-33.9360, 151.2070))
+        }
     }
 
     @Synchronized protected fun buildGoogleApiClient(){

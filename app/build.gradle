@@ -37,6 +37,7 @@ dependencies {
     compile 'com.cenkgun:chatbar:1.0.2'
     compile 'com.google.android.gms:play-services-location:11.6.0'
     compile 'com.google.android.gms:play-services-maps:11.6.0'
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
     compile 'com.karumi:dexter:4.2.0'
 }
 
