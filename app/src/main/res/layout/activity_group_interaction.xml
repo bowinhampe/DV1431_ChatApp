@@ -42,8 +42,8 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        class = "com.dv1431_chatapp.BlankFragment"
         android:id="@+id/groupInteraction_activity_mainFragment"
-        class = "com.dv1431_chatapp.MapFragment"
         android:layout_below="@id/groupInteraction_activity_functionSpinner"
         android:layout_marginTop="15dp">
 
