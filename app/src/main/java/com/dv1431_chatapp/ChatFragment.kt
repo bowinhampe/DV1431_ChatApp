@@ -12,25 +12,31 @@ import android.widget.AbsListView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.dv1431_chatapp.R.layout.fragment_chat
+import com.firebase.ui.database.FirebaseListAdapter
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_chat.*
+import android.widget.TextView
+import com.dv1431_chatapp.database.Group
+import com.google.firebase.auth.FirebaseAuth
 
 
 class ChatFragment:Fragment() {
 
  // TODO: Rename and change types of parameters
-    private var mParam1:String? = null
-    private var mParam2:String? = null
     private val mData = ArrayList<ChatMessage>()
-    private var mChatAdapter : ChatMessageAdapter? = null
+    private var mGroup : Group ? = null
     private var mChatListView : ListView? = null
 
     override fun onCreate(savedInstanceState:Bundle?) {
         super.onCreate(savedInstanceState)
-        if (getArguments() != null)
-        {
-        mParam1 = getArguments().getString(ARG_PARAM1)
-        mParam2 = getArguments().getString(ARG_PARAM2)
+        if(mGroup == null){
+            println("group null")
         }
+        if(arguments == null){
+            println("arg null")
+        }
+        val args = arguments
+        mGroup = args.getSerializable("mGroup") as Group ?
     }
 
      override fun onStart() {
@@ -38,42 +44,40 @@ class ChatFragment:Fragment() {
          //initializeChat()
          initiateGUIComponents()
          chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
-         chatFragment_input_chatBar.setSendClickListener(){
-             println("DEBUG_Clickedbutton")
-             var chatMsg = ChatMessage(true,chatFragment_input_chatBar.messageText)
-             mChatAdapter!!.add(chatMsg)
+         chatFragment_input_chatBar.setSendClickListener{
+             val message = chatFragment_input_chatBar.messageText
+             FirebaseDatabase.getInstance()
+                     .reference
+                     .push()
+                     .setValue(ChatMessage(message,
+                             FirebaseAuth.getInstance()
+                                     .currentUser!!
+                                     .displayName!!)
+                     )
          }
 
      }
 
-    /*fun initializeChat(){
-        // TODO Hardcoded Data
-        var chatMsg = ChatMessage(true,"Hej")
-        mData.add(chatMsg)
-        chatMsg = ChatMessage(false ,"Hej fag")
-        mData.add(chatMsg)
-        chatMsg = ChatMessage(true ,"Rip life hooj :)")
-        mData.add(chatMsg)
-        chatMsg = ChatMessage(false ,"./Care.not")
-        mData.add(chatMsg)
-    }*/
     fun initiateGUIComponents(){
         // Fetch and create List view for holding chat and its adapter
         mChatListView = chatFragment_msgWindow_listView
-        mChatAdapter = ChatMessageAdapter(context, fragment_chat, mData)
-        mChatListView!!.adapter = mChatAdapter
 
-        // Initiate options
-        mChatListView!!.transcriptMode = AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL
-        mChatAdapter!!.registerDataSetObserver(listViewDataSetObserver())
-    }
+        val fireBaseDataBaseRef = FirebaseDatabase.getInstance().getReference("groups").child(mGroup!!.getId()).child("messages")
+        val adapter = object : FirebaseListAdapter<ChatMessage>(activity, ChatMessage::class.java,
+                R.layout.message, fireBaseDataBaseRef) {
+            override fun populateView(v: View, model: ChatMessage, position: Int) {
+                // Get references to the views of message.xml
+                val messageText = v.findViewById<TextView>(R.id.message_text) as TextView
+                val messageUser = v.findViewById<TextView>(R.id.message_user) as TextView
 
-    inner class listViewDataSetObserver():DataSetObserver(){
-        override fun onChanged() {
-            mChatListView!!.setSelection(mChatAdapter!!.count-1)
-            println(mChatAdapter!!.count-1)
-            super.onChanged()
+                // Set their text
+                messageText.setText(model.mMsg)
+                messageUser.setText(model.mUsr)
+
+            }
         }
+
+        mChatListView!!.setAdapter(adapter)
     }
 
     override fun onCreateView(inflater:LayoutInflater?, container:ViewGroup?,
@@ -97,19 +101,13 @@ class ChatFragment:Fragment() {
 
 
     companion object {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private val ARG_PARAM1 = "param1"
-    private val ARG_PARAM2 = "param2"
 
-    // TODO: Rename and change types and number of parameters
-    fun newInstance(param1:String, param2:String):ChatFragment {
-    val fragment = ChatFragment()
-    val args = Bundle()
-    args.putString(ARG_PARAM1, param1)
-    args.putString(ARG_PARAM2, param2)
-    fragment.setArguments(args)
-    return fragment
+    fun newInstance(group : Group):ChatFragment {
+        val fragment = ChatFragment()
+        val args = Bundle()
+        args.putSerializable("group", group)
+        fragment.arguments = args
+        return fragment
     }
     }
 
