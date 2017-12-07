@@ -1,7 +1,7 @@
 package com.dv1431_chatapp
 
 import android.content.Context
-import android.graphics.Color
+import android.graphics.*
 import android.location.Location
 import android.location.LocationListener
 
@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.dv1431_chatapp.database.Message
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
@@ -20,12 +19,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_map.*
-import com.google.maps.android.ui.IconGenerator
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-
-
-
-
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -37,11 +31,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
     private var mCurrentLocationMarker: Marker? = null
     private val mFragmentManager = SupportMapFragment()
 
-    private lateinit var mIconGenerator:  IconGenerator
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mIconGenerator = IconGenerator(context)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -64,21 +55,34 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
         super.onDetach()
     }
 
-    private fun addIcon(iconGenerator: IconGenerator, userName: String, message: String, position: LatLng) {
-        val markerOptions = MarkerOptions()
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(userName)))
-        markerOptions.position(position)
-        markerOptions.anchor(iconGenerator.anchorU, iconGenerator.anchorV)
-        markerOptions.snippet(message)
-        mMap.addMarker(markerOptions)?.showInfoWindow()
+    private fun addIcon(bmp: Bitmap, userName: String, message: String, position: LatLng) {
+        // Draws the first letter in the username on the bitmap
+        val color = Paint()
+        color.textSize = 36f
+        color.color = Color.BLACK
+
+        val canvas = Canvas(bmp)
+        canvas.drawText(userName[0].toString(), 36f, 48f, color)
+
+        // Set the marker options
+        val markerOptions = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bmp))
+                .anchor(0.5f, 1f)
+                .position(position)
+                .title(userName)
+                .snippet(message)
+        mMap.addMarker(markerOptions)
     }
 
     override fun onMapReady(map: GoogleMap?) {
         if (map != null) {
             mMap = map
 
-            // Add user locations
-            addIcon(mIconGenerator, "User", "Message", LatLng(-33.9360, 151.2070))
+            // Load marker icon
+            val bmpOpts = BitmapFactory.Options()
+            bmpOpts.inScaled = false
+            val bmp = BitmapFactory.decodeResource(resources, R.drawable.icon_marker, bmpOpts).copy(Bitmap.Config.ARGB_8888, true)
+
+            addIcon(bmp, "User", "Message", LatLng(0.0, 0.0))
         }
     }
 
