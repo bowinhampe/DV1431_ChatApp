@@ -68,19 +68,21 @@ class ChatFragment:Fragment() {
         mChatListView = chatFragment_msgWindow_listView
 
         val fireBaseDataBaseRef = FirebaseDatabase.getInstance().getReference("groups").child(mGroup!!.getId()).child("messages")
-        val adapter = object : FirebaseListAdapter<ChatMessage>(activity, ChatMessage::class.java,
+        val fireBaseAdapter = object : FirebaseListAdapter<Message>(activity, Message::class.java,
                 R.layout.message, fireBaseDataBaseRef) {
-            override fun populateView(v: View, model: ChatMessage, position: Int) {
+            override fun populateView(v: View, model: Message, position: Int) {
                 // Get references to the views of message.xml
                 val messageText = v.findViewById<TextView>(R.id.message_text) as TextView
                 val messageUser = v.findViewById<TextView>(R.id.message_user) as TextView
 
                 // Set their text
-                messageText.setText(model.mMsg)
-                messageUser.setText(model.mUsr)
-                // TODO: Doesnt really get any messages from group, check wether Id is correct when the instance is getted or smething bish
+                messageText.setText(model.getMessage())
+                messageUser.setText(model.get)
+
+                // TODO: SET messageUser to real username somehow (above this line)
             }
         }
+        mChatListView!!.adapter = fireBaseAdapter
     }
 
         override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
