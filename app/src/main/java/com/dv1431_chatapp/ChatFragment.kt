@@ -52,6 +52,7 @@ class ChatFragment:Fragment() {
     }
 
     private fun getLocation(){
+        // TODO: THIS NEEDS TO WORK, somehow LOCATIONS doesnt update.
         // Acquire a reference to the system Location Manager
         val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -79,19 +80,25 @@ class ChatFragment:Fragment() {
         }
 
 // Register the listener with the Location Manager to receive location updates
-        val GPS_TIME_INTERVAL = 0 as Long
-        val GPS_MOVEMENT_INTERVAL = 0 as Float
+        val GPS_TIME_INTERVAL: Long = 0
+        val GPS_MOVEMENT_INTERVAL: Float = 0.0f
         try {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, locationListener)
         }
         catch (e: SecurityException){
         }
 
-        if(mOldLocation!!.latitude != mCurrentLocation!!.latitude){
-            locationManager.removeUpdates(locationListener)
+        if(mOldLocation == null || mCurrentLocation == null){
+            println("null af")
+        }
+        else {
+            if (mOldLocation!!.latitude != mCurrentLocation!!.latitude) {
+                locationManager.removeUpdates(locationListener)
+            }
         }
 
     }
+
     override fun onStart() {
         super.onStart()
 
