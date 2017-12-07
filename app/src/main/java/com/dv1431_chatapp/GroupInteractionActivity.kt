@@ -26,6 +26,8 @@ class GroupInteractionActivity : AppCompatActivity() {
     }
 
     private fun initializeGUIComponents(){
+        createGroupActivity_back_btn.setOnClickListener( { finish() })
+
         groupInteraction_activity_groupName_txtView.text = mGroup.getName()
         groupInteraction_activity_changeMode_btn.setOnClickListener{
             if(!mFragmentMode){

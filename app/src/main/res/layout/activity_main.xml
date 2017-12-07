@@ -11,6 +11,16 @@
         android:layout_height="match_parent">
 
         <Button
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:id="@+id/createGroupActivity_back_btn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/back">
+
+        </Button>
+
+        <Button
             android:layout_width="250dp"
             android:layout_height="50dp"
             android:text="@string/btn_create_grp"
@@ -30,6 +40,8 @@
             android:layout_marginTop="25dp">
 
         </ListView>
+
+
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
