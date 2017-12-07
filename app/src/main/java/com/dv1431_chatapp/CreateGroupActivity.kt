@@ -60,6 +60,8 @@ class CreateGroupActivity : AppCompatActivity() {
     }
 
     private fun initiateGUIComponents(){
+        createGroupActivity_back_btn.setOnClickListener( { finish() })
+
         mUserList = ArrayList()
         mUserAdapter = UserListAdapter(this, createGroupActivity_usersInGroup_listView.id, mUserList)
         createGroupActivity_usersInGroup_listView.adapter = mUserAdapter

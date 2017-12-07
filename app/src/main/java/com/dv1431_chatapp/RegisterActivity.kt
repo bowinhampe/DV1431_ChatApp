@@ -28,6 +28,8 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun initiateGUIComponents() {
+        createGroupActivity_back_btn.setOnClickListener( { finish() })
+
         registerActivity_register_btn.setOnClickListener {
             register()
         }

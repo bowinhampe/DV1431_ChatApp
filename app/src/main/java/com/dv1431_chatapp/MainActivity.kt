@@ -129,6 +129,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateGUIComponents() {
+        createGroupActivity_back_btn.setOnClickListener( { finish() })
+
         val groupListView = mainActivity_grp_listView
         val groupNames = ArrayList<String>()
 
