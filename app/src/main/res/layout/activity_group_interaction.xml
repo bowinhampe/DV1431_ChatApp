@@ -45,7 +45,7 @@
        android:layout_height="match_parent"
        android:id="@+id/groupInteraction_activity_mainFragment"
        android:layout_below="@id/groupInteraction_activity_functionSpinner"
-       android:layout_marginTop="15dp">
+       android:layout_marginTop="5dp">
 
    </RelativeLayout>
 

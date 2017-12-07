@@ -69,6 +69,9 @@ class CreateGroupActivity : AppCompatActivity() {
         createGroupActivity_createGrp_btn.setOnClickListener {
             createGroup()
         }
+        createGroupActivity_back_btn.setOnClickListener{
+            finish()
+        }
     }
 
     private fun createGroup() {
@@ -89,6 +92,9 @@ class CreateGroupActivity : AppCompatActivity() {
         mUserIds.forEach {
             usersRef.child(it.key).child("groups").updateChildren(groupId)
         }
+
+        finish()
     }
+
 
 }
