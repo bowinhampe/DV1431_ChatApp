@@ -19,16 +19,6 @@
 
     </ListView>
 
-    <Button
-        android:layout_width="50dp"
-        android:layout_height="25dp"
-        android:id="@+id/createGroupActivity_back_btn"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/back">
-
-    </Button>
-
 
     <com.cenkgun.chatbar.ChatBarView
         android:id="@+id/chatFragment_input_chatBar"
