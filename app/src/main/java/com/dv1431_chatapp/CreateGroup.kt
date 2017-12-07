@@ -1,6 +1,7 @@
 package com.dv1431_chatapp
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,8 +12,17 @@ import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ProviderQueryResult
 import kotlinx.android.synthetic.main.activity_create_group.*
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseUser
+import android.support.annotation.NonNull
+import android.R.attr.password
+import com.google.android.gms.tasks.OnCompleteListener
+
 
 class CreateGroup : AppCompatActivity() {
 
@@ -26,9 +36,11 @@ class CreateGroup : AppCompatActivity() {
         initiateGUIComponents()
     }
 
-    private fun addUserToList(){
+    private fun addUserToList(userEmail: String){
         // TODO: Check if user exist and use the ADD below, Else write a "Toast"
-        mGroupAdapter!!.add("TEST-USER@COOLIO")
+        if (mGroupAdapter!!.getPosition(userEmail) < 0)
+            mGroupAdapter!!.add(userEmail)
+
     }
     private fun initiateGUIComponents(){
         mUserList = ArrayList<String>()
@@ -42,12 +54,24 @@ class CreateGroup : AppCompatActivity() {
 
     private fun findUser() {
         val userEmail = createGroupActivity_userEmail_edtxt.text.toString()
-        val userRecord = FirebaseAuth.getInstance().fetchProvidersForEmail(userEmail)
+        val auth = FirebaseAuth.getInstance()
 
-       if(userRecord.isSuccessful())
-           if (userRecord.getResult().providers?.size!! > 0)
-               addUserToList(userEmail)
+        auth.fetchProvidersForEmail(userEmail).addOnCompleteListener(OnCompleteListener<ProviderQueryResult> { task ->
+               if (task.isSuccessful) {
+                   ///////// getProviders().size() will return size 1. if email ID is available.
+                   if (task.result.providers!!.size == 1) {
+                       addUserToList(userEmail)
+                       println("user found")
+                   } else
+                       println("no user found")
+               }
+            })
     }
+
+
+
+
+
 
 
 }
