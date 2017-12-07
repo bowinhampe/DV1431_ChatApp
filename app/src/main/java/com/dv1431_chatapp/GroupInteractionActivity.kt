@@ -1,8 +1,5 @@
 package com.dv1431_chatapp
 
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.dv1431_chatapp.database.Group
@@ -54,6 +51,7 @@ class GroupInteractionActivity : AppCompatActivity() {
         //val fragment = ChatFragment.newInstance(mGroup)
         val bundle = Bundle()
         bundle.putSerializable("mGroup", mGroup)
+        bundle.putSerializable("mUser", mUser)
         val fragment = ChatFragment()
         fragment.arguments = bundle
         val transaction = mFragmentManager.beginTransaction()

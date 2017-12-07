@@ -25,8 +25,8 @@ import com.google.firebase.auth.FirebaseAuth
 class ChatFragment:Fragment() {
 
 
-    private val mData = ArrayList<ChatMessage>()
     private var mGroup: Group? = null
+    private var mUser: User? = null
     private var mChatListView: ListView? = null
 
 
@@ -38,6 +38,8 @@ class ChatFragment:Fragment() {
         }
         val args = arguments
         mGroup = args.getSerializable("mGroup") as Group?
+        mUser = args.getSerializable("mUser") as User?
+
     }
 
     override fun onStart() {
@@ -49,14 +51,13 @@ class ChatFragment:Fragment() {
         chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
         chatFragment_input_chatBar.setSendClickListener {
             val message = chatFragment_input_chatBar.messageText
+            val userName = mUser!!.getUsername()
+            val userID = mUser!!.getId()
+
             FirebaseDatabase.getInstance()
-                    .reference
+                    .getReference("groups").child(mGroup!!.getId()).child("messages")
                     .push()
-                    .setValue(ChatMessage(message,
-                            FirebaseAuth.getInstance()
-                                    .currentUser!!
-                                    .displayName!!)
-                    )
+                    .setValue(Message(userID, userName, message))
             // TODO : Something wrong here, possible ChatMessage class or Database message class
         }
 
@@ -77,7 +78,7 @@ class ChatFragment:Fragment() {
 
                 // Set their text
                 messageText.setText(model.getMessage())
-                messageUser.setText(model.get)
+                messageUser.setText(model.getUser())
 
                 // TODO: SET messageUser to real username somehow (above this line)
             }
