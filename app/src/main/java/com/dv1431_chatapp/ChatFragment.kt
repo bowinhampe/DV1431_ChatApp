@@ -2,6 +2,9 @@ package com.dv1431_chatapp
 
 import android.content.Context
 import android.database.DataSetObserver
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationListener
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,106 +15,163 @@ import android.widget.AbsListView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.dv1431_chatapp.R.layout.fragment_chat
+import com.firebase.ui.database.FirebaseListAdapter
+import com.google.firebase.database.FirebaseDatabase
+import com.dv1431_chatapp.database.Group
+import com.dv1431_chatapp.database.Message
+import com.dv1431_chatapp.database.User
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_chat.*
+import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
+import java.util.*
+import android.location.LocationManager
+
 
 
 class ChatFragment:Fragment() {
 
- // TODO: Rename and change types of parameters
-    private var mParam1:String? = null
-    private var mParam2:String? = null
-    private val mData = ArrayList<ChatMessage>()
-    private var mChatAdapter : ChatMessageAdapter? = null
-    private var mChatListView : ListView? = null
 
-    override fun onCreate(savedInstanceState:Bundle?) {
+    private var mGroup: Group? = null
+    private var mUser: User? = null
+    private var mChatListView: ListView? = null
+    private var mCurrentLocation: Location? = null
+    private var mOldLocation: Location? = null
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (getArguments() != null)
-        {
-        mParam1 = getArguments().getString(ARG_PARAM1)
-        mParam2 = getArguments().getString(ARG_PARAM2)
+
+        if (arguments == null) {
+            println("arg null")
         }
+        val args = arguments
+        mGroup = args.getSerializable("mGroup") as Group?
+        mUser = args.getSerializable("mUser") as User?
+
     }
 
-     override fun onStart() {
-         super.onStart()
-         //initializeChat()
-         initiateGUIComponents()
-         chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
-         chatFragment_input_chatBar.setSendClickListener(){
-             println("DEBUG_Clickedbutton")
-             var chatMsg = ChatMessage(true,chatFragment_input_chatBar.messageText)
-             mChatAdapter!!.add(chatMsg)
-         }
+    private fun getLocation(){
+        // TODO: THIS NEEDS TO WORK, somehow LOCATIONS doesnt update.
+        // Acquire a reference to the system Location Manager
+        val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-     }
+        // Define a listener that responds to location updates
+        val locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                // Called when a new location is found by the network location provider.
+                println(location.latitude)
+                println(location.longitude)
+                if(mOldLocation == null){
+                    mCurrentLocation = location
+                    mOldLocation = mCurrentLocation
+                }
+                else {
+                    mOldLocation = mCurrentLocation
+                    mCurrentLocation = location
+                }
+            }
 
-    /*fun initializeChat(){
-        // TODO Hardcoded Data
-        var chatMsg = ChatMessage(true,"Hej")
-        mData.add(chatMsg)
-        chatMsg = ChatMessage(false ,"Hej fag")
-        mData.add(chatMsg)
-        chatMsg = ChatMessage(true ,"Rip life hooj :)")
-        mData.add(chatMsg)
-        chatMsg = ChatMessage(false ,"./Care.not")
-        mData.add(chatMsg)
-    }*/
-    fun initiateGUIComponents(){
+            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+
+            override fun onProviderEnabled(provider: String) {}
+
+            override fun onProviderDisabled(provider: String) {}
+        }
+
+// Register the listener with the Location Manager to receive location updates
+        val GPS_TIME_INTERVAL: Long = 0
+        val GPS_MOVEMENT_INTERVAL: Float = 0.0f
+        try {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, locationListener)
+        }
+        catch (e: SecurityException){
+        }
+
+        if(mOldLocation == null || mCurrentLocation == null){
+            println("null af")
+        }
+        else {
+            if (mOldLocation!!.latitude != mCurrentLocation!!.latitude) {
+                locationManager.removeUpdates(locationListener)
+            }
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        initiateGUIComponents()
+
+        chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
+        chatFragment_input_chatBar.setSendClickListener {
+            val message = chatFragment_input_chatBar.messageText
+            val userName = mUser!!.getUsername()
+            val userID = mUser!!.getId()
+
+            FirebaseDatabase.getInstance()
+                    .getReference("groups").child(mGroup!!.getId()).child("messages")
+                    .push()
+                    .setValue(Message(userID, userName, message))
+            getLocation()
+        }
+
+    }
+
+
+    fun initiateGUIComponents() {
         // Fetch and create List view for holding chat and its adapter
         mChatListView = chatFragment_msgWindow_listView
-        mChatAdapter = ChatMessageAdapter(context, fragment_chat, mData)
-        mChatListView!!.adapter = mChatAdapter
 
-        // Initiate options
-        mChatListView!!.transcriptMode = AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL
-        mChatAdapter!!.registerDataSetObserver(listViewDataSetObserver())
+        val fireBaseDataBaseRef = FirebaseDatabase.getInstance().getReference("groups").child(mGroup!!.getId()).child("messages")
+        val fireBaseAdapter = object : FirebaseListAdapter<Message>(activity, Message::class.java,
+                R.layout.message, fireBaseDataBaseRef) {
+            override fun populateView(v: View, model: Message, position: Int) {
+                // Get references to the views of message.xml
+                val messageText = v.findViewById<TextView>(R.id.message_text) as TextView
+                val messageUser = v.findViewById<TextView>(R.id.message_user) as TextView
+
+                // Set their text
+                messageText.setText(model.getMessage())
+                messageUser.setText(model.getUser())
+
+                // TODO: SET messageUser to real username somehow (above this line)
+            }
+        }
+        mChatListView!!.adapter = fireBaseAdapter
     }
 
-    inner class listViewDataSetObserver():DataSetObserver(){
-        override fun onChanged() {
-            mChatListView!!.setSelection(mChatAdapter!!.count-1)
-            println(mChatAdapter!!.count-1)
-            super.onChanged()
+        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+            // Inflate the layout for this fragment
+            return inflater!!.inflate(R.layout.fragment_chat, container, false)
+        }
+
+        // TODO: Rename method, update argument and hook method into UI event
+        fun onButtonPressed(uri: Uri) {
+
+        }
+
+        public override fun onAttach(context: Context?) {
+            super.onAttach(context)
+        }
+
+        public override fun onDetach() {
+            super.onDetach()
+        }
+
+
+        companion object {
+
+            fun newInstance(group: Group): ChatFragment {
+                val fragment = ChatFragment()
+                val args = Bundle()
+                args.putSerializable("group", group)
+                fragment.arguments = args
+                return fragment
+            }
+
         }
     }
 
-    override fun onCreateView(inflater:LayoutInflater?, container:ViewGroup?,
-    savedInstanceState:Bundle?):View?
-    {
-    // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_chat, container, false)
-    }
 
- // TODO: Rename method, update argument and hook method into UI event
-     fun onButtonPressed(uri:Uri) {
-    }
-
-    public override fun onAttach(context:Context?) {
-    super.onAttach(context)
-    }
-
-    public override fun onDetach() {
-    super.onDetach()
-    }
-
-
-    companion object {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private val ARG_PARAM1 = "param1"
-    private val ARG_PARAM2 = "param2"
-
-    // TODO: Rename and change types and number of parameters
-    fun newInstance(param1:String, param2:String):ChatFragment {
-    val fragment = ChatFragment()
-    val args = Bundle()
-    args.putString(ARG_PARAM1, param1)
-    args.putString(ARG_PARAM2, param2)
-    fragment.setArguments(args)
-    return fragment
-    }
-    }
-
-
- }// Required empty public constructor

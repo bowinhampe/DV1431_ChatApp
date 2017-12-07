@@ -21,8 +21,9 @@ import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsList
 import com.google.firebase.database.ChildEventListener
 
 class MainActivity : AppCompatActivity() {
-    lateinit var mGroupList: ArrayList<String>
+    //lateinit var mGroupList: ArrayList<String>
     private lateinit var mUser: User
+    private var mGroups: ArrayList<Group> = ArrayList()
     var mSelectedGroupNumber = -1
 
     private val mRetrieveGroupListener = object : ValueEventListener {
@@ -31,9 +32,10 @@ class MainActivity : AppCompatActivity() {
             // Get group from user's group list
             val group = dataSnapshot.getValue<Group>(Group::class.java)
             if (group != null) {
-                mGroupList.add(group.getName())
-
+                group.setId(dataSnapshot.key)
+                mGroups.add(group)
                 // RE-paint the buttons
+                // TODO: should not repaint after every group add
                 initiateGUIComponents()
             } else {
                 // TODO: Toast an error occurred
@@ -48,9 +50,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
-        mGroupList = ArrayList()
+
         initiateGroupList()
         addUserGroupsEventListener()
         requestPermission()
@@ -77,8 +80,9 @@ class MainActivity : AppCompatActivity() {
                     if (!mUser.getGroups().containsKey(groupId)) {
                         retrieveGroup(groupId)
                     }
-                } else
+                } else {
                     println("NULL")
+                }
             }
 
             // Get the data on a post that has been removed
@@ -100,14 +104,15 @@ class MainActivity : AppCompatActivity() {
                 .build()
         Dexter.withActivity(this)
                 .withPermissions(Manifest.permission.ACCESS_FINE_LOCATION
-                                ,Manifest.permission.ACCESS_COARSE_LOCATION)
+                        ,Manifest.permission.ACCESS_COARSE_LOCATION)
                 .withListener(dialogMultiplePermissionsListener)
                 .check()
     }
 
-    private fun initiateCreateGroup(){
+    private fun initiateCreateGroup() {
         val intent = Intent(this, CreateGroupActivity::class.java)
         intent.putExtra(User::class.java.simpleName, mUser)
+
         startActivity(intent)
     }
 
@@ -116,6 +121,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateGroupList() {
+        // TODO: limit listener to groups where the user has access to
         for (grp in mUser.getGroups()) {
             // Add listener for every group the user is in
             retrieveGroup(grp.key)
@@ -123,8 +129,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateGUIComponents() {
+        createGroupActivity_back_btn.setOnClickListener( { finish() })
+
         val groupListView = mainActivity_grp_listView
-        groupListView.adapter = groupListAdapter(this, mGroupList)
+        val groupNames = ArrayList<String>()
+
+        mGroups.forEach() {
+            groupNames.add(it.getName())
+        }
+
+        groupListView.adapter = groupListAdapter(this, groupNames)
         groupListView.onItemClickListener = groupListItemClickListener()
         mainActivity_create_grp_btn.setOnClickListener {
             initiateCreateGroup()
@@ -140,10 +154,12 @@ class MainActivity : AppCompatActivity() {
     fun startGroupInteractionActivity(groupPos: Int){
         // TODO: Use group "position" from listView click to create a chat window with the specified group.
         // EXAMPLE CODE
-        var specifiedGroup = mGroupList.get(groupPos)
-        intent.putExtra("groupName", specifiedGroup)
+        val selectedGroup = mGroups.get(groupPos)
+        //intent.putExtra("groupName", specifiedGroup)
 
         val intent = Intent(this, GroupInteractionActivity::class.java)
+        intent.putExtra(User::class.java.simpleName, mUser)
+        intent.putExtra(Group::class.java.simpleName, selectedGroup)
         startActivity(intent)
     }
 

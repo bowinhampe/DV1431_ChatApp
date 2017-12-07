@@ -19,6 +19,7 @@
 
     </ListView>
 
+
     <com.cenkgun.chatbar.ChatBarView
         android:id="@+id/chatFragment_input_chatBar"
         android:layout_width="match_parent"

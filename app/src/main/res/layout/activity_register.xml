@@ -20,6 +20,16 @@
         android:inputType="text"
         android:hint="@string/edtxt_pw"/>
 
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="25dp"
+        android:id="@+id/createGroupActivity_back_btn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/back">
+
+    </Button>
+
     <EditText
         android:layout_width="250dp"
         android:layout_height="50dp"

@@ -8,7 +8,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.dv1431_chatapp"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -34,11 +34,13 @@ dependencies {
     compile 'com.google.firebase:firebase-core:11.6.0'
     compile 'com.google.firebase:firebase-auth:11.6.0'
     compile 'com.google.firebase:firebase-database:11.6.0'
+    compile 'com.firebaseui:firebase-ui:0.4.3'
     compile 'com.cenkgun:chatbar:1.0.2'
     compile 'com.google.android.gms:play-services-location:11.6.0'
     compile 'com.google.android.gms:play-services-maps:11.6.0'
     compile 'com.karumi:dexter:4.2.0'
 }
+
 
 
 

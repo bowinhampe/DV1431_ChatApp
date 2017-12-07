@@ -60,6 +60,8 @@ class CreateGroupActivity : AppCompatActivity() {
     }
 
     private fun initiateGUIComponents(){
+        createGroupActivity_back_btn.setOnClickListener( { finish() })
+
         mUserList = ArrayList()
         mUserAdapter = UserListAdapter(this, createGroupActivity_usersInGroup_listView.id, mUserList)
         createGroupActivity_usersInGroup_listView.adapter = mUserAdapter
@@ -68,6 +70,9 @@ class CreateGroupActivity : AppCompatActivity() {
         }
         createGroupActivity_createGrp_btn.setOnClickListener {
             createGroup()
+        }
+        createGroupActivity_back_btn.setOnClickListener{
+            finish()
         }
     }
 
@@ -89,6 +94,9 @@ class CreateGroupActivity : AppCompatActivity() {
         mUserIds.forEach {
             usersRef.child(it.key).child("groups").updateChildren(groupId)
         }
+
+        finish()
     }
+
 
 }

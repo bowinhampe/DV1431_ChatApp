@@ -18,6 +18,17 @@
         android:id="@+id/groupInteraction_activity_groupName_txtView">
 
     </TextView>
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="25dp"
+        android:id="@+id/createGroupActivity_back_btn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/back">
+
+    </Button>
+
     <Spinner
         android:layout_width="250dp"
         android:layout_height="40dp"
@@ -39,14 +50,14 @@
 
     </Button>
 
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/groupInteraction_activity_mainFragment"
-        class = "com.dv1431_chatapp.ChatFragment"
-        android:layout_below="@id/groupInteraction_activity_functionSpinner"
-        android:layout_marginTop="15dp">
 
-    </fragment>
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/groupInteraction_activity_mainFragment"
+       android:layout_below="@id/groupInteraction_activity_functionSpinner"
+       android:layout_marginTop="5dp">
+
+   </RelativeLayout>
 
 </RelativeLayout>
