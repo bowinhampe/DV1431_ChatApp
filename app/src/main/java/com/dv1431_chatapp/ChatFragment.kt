@@ -2,6 +2,9 @@ package com.dv1431_chatapp
 
 import android.content.Context
 import android.database.DataSetObserver
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationListener
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -21,6 +24,10 @@ import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
+import java.util.*
+import android.location.LocationManager
+
+
 
 class ChatFragment:Fragment() {
 
@@ -28,6 +35,8 @@ class ChatFragment:Fragment() {
     private var mGroup: Group? = null
     private var mUser: User? = null
     private var mChatListView: ListView? = null
+    private var mCurrentLocation: Location? = null
+    private var mOldLocation: Location? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,10 +51,50 @@ class ChatFragment:Fragment() {
 
     }
 
+    private fun getLocation(){
+        // Acquire a reference to the system Location Manager
+        val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        // Define a listener that responds to location updates
+        val locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                // Called when a new location is found by the network location provider.
+                println(location.latitude)
+                println(location.longitude)
+                if(mOldLocation == null){
+                    mCurrentLocation = location
+                    mOldLocation = mCurrentLocation
+                }
+                else {
+                    mOldLocation = mCurrentLocation
+                    mCurrentLocation = location
+                }
+            }
+
+            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+
+            override fun onProviderEnabled(provider: String) {}
+
+            override fun onProviderDisabled(provider: String) {}
+        }
+
+// Register the listener with the Location Manager to receive location updates
+        val GPS_TIME_INTERVAL = 0 as Long
+        val GPS_MOVEMENT_INTERVAL = 0 as Float
+        try {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, locationListener)
+        }
+        catch (e: SecurityException){
+        }
+
+        if(mOldLocation!!.latitude != mCurrentLocation!!.latitude){
+            locationManager.removeUpdates(locationListener)
+        }
+
+    }
     override fun onStart() {
         super.onStart()
 
-        //initializeChat()
         initiateGUIComponents()
 
         chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
@@ -58,7 +107,7 @@ class ChatFragment:Fragment() {
                     .getReference("groups").child(mGroup!!.getId()).child("messages")
                     .push()
                     .setValue(Message(userID, userName, message))
-            // TODO : Something wrong here, possible ChatMessage class or Database message class
+            getLocation()
         }
 
     }
