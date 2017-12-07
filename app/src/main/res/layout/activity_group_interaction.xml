@@ -39,14 +39,14 @@
 
     </Button>
 
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class = "com.dv1431_chatapp.BlankFragment"
-        android:id="@+id/groupInteraction_activity_mainFragment"
-        android:layout_below="@id/groupInteraction_activity_functionSpinner"
-        android:layout_marginTop="15dp">
 
-    </fragment>
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/groupInteraction_activity_mainFragment"
+       android:layout_below="@id/groupInteraction_activity_functionSpinner"
+       android:layout_marginTop="15dp">
+
+   </RelativeLayout>
 
 </RelativeLayout>
