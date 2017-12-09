@@ -2,11 +2,13 @@ package com.dv1431_chatapp
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationListener
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +22,9 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_map.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.maps.android.ui.IconGenerator
+
+
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -55,6 +60,16 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
         super.onDetach()
     }
 
+    private fun addIcon(iconGenerator: IconGenerator, userName: String, message: String, position: LatLng) {
+        val markerOptions = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(userName[0].toString())))
+                .position(position)
+                .anchor(iconGenerator.anchorU, iconGenerator.anchorV)
+                .title(userName)
+                .snippet(message)
+
+        mMap.addMarker(markerOptions)
+    }
+
     private fun addIcon(bmp: Bitmap, userName: String, message: String, position: LatLng) {
         // Draws the first letter in the username on the bitmap
         val color = Paint()
@@ -80,9 +95,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
             // Load marker icon
             val bmpOpts = BitmapFactory.Options()
             bmpOpts.inScaled = false
+
             val bmp = BitmapFactory.decodeResource(resources, R.drawable.icon_marker, bmpOpts).copy(Bitmap.Config.ARGB_8888, true)
 
             addIcon(bmp, "User", "Message", LatLng(0.0, 0.0))
+
+            // Using IconGenerator
+            /*val iconGenerator = IconGenerator(context)
+            iconGenerator.setBackground(ContextCompat.getDrawable(context, R.drawable.icon_marker))
+            addIcon(iconGenerator, "User", "Message", LatLng(0.0, 0.0))*/
         }
     }
 
