@@ -10,6 +10,9 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.dv1431_chatapp.database.FirebaseHandler
 import com.dv1431_chatapp.database.User
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
@@ -49,29 +52,29 @@ class LoginActivity : AppCompatActivity() {
         val email = loginActivity_usrname_edtxt.text.toString()
         val password = loginActivity_pw_edtxt.text.toString()
 
-        val auth = FirebaseAuth.getInstance()
-
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "signInWithEmail:success")
-                        val userId = auth.currentUser?.uid
-                        if (userId != null) retrieveUserFromDatabase(userId)
-                    } else {
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(this, "Authentication failed.",
-                                Toast.LENGTH_LONG).show()
-                    }
-                }
+        FirebaseHandler.login(email, password, OnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "signInWithEmail:success")
+                val userId = FirebaseHandler.getAuth().currentUser?.uid
+                if (userId != null) retrieveUserFromDatabase(userId)
+            } else {
+                Log.w(TAG, "signInWithEmail:failure", task.exception)
+                Toast.makeText(this, "Authentication failed.",
+                        Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
     private fun retrieveUserFromDatabase(userId: String) {
-        val userRef = FirebaseDatabase.getInstance().getReference("usersTest").child(userId)
-
         val context = this
-        val retrieveUserListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val user = dataSnapshot.getValue<User>(User::class.java)
+
+        FirebaseHandler.retrieveDataOnce("usersTest/"+userId, object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                // TODO: Log and toast error
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                val user = dataSnapshot?.getValue<User>(User::class.java)
                 if (user != null) {
                     user.setId(dataSnapshot.key)
                     val intent = Intent(context, MainActivity::class.java)
@@ -86,12 +89,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // TODO: Log and toast error
-            }
-        }
-
-        userRef.addListenerForSingleValueEvent(retrieveUserListener)
+        })
     }
 
     private fun register(){
