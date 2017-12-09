@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
     private val mRetrieveGroupListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-
             // Get group from user's group list
             val group = dataSnapshot.getValue<Group>(Group::class.java)
             if (group != null) {
@@ -53,7 +52,6 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
-
         initiateGroupList()
         addUserGroupsEventListener()
         requestPermission()
@@ -62,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun addUserGroupsEventListener() {
         // Get a reference to our posts
-        val ref = FirebaseDatabase.getInstance().getReference("users").child(mUser.getId()).child("groups")
+        val ref = FirebaseDatabase.getInstance().getReference("usersTest").child(mUser.getId()).child("groups")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
@@ -87,8 +85,7 @@ class MainActivity : AppCompatActivity() {
 
             // Get the data on a post that has been removed
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                val title = dataSnapshot.child("title").value as String?
-                // Remove group from list
+                // TODO: Remove group from list
             }
 
             override fun onCancelled(p0: DatabaseError?) {
@@ -117,7 +114,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun retrieveGroup(groupId: String) {
-        FirebaseDatabase.getInstance().getReference("groups").child(groupId).addListenerForSingleValueEvent(mRetrieveGroupListener)
+        FirebaseDatabase.getInstance().getReference("groupsTest").child(groupId).addListenerForSingleValueEvent(mRetrieveGroupListener)
     }
 
     private fun initiateGroupList() {
@@ -134,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         val groupListView = mainActivity_grp_listView
         val groupNames = ArrayList<String>()
 
-        mGroups.forEach() {
+        mGroups.forEach {
             groupNames.add(it.getName())
         }
 
@@ -155,7 +152,6 @@ class MainActivity : AppCompatActivity() {
         // TODO: Use group "position" from listView click to create a chat window with the specified group.
         // EXAMPLE CODE
         val selectedGroup = mGroups.get(groupPos)
-        //intent.putExtra("groupName", specifiedGroup)
 
         val intent = Intent(this, GroupInteractionActivity::class.java)
         intent.putExtra(User::class.java.simpleName, mUser)

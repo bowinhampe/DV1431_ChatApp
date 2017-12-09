@@ -32,8 +32,8 @@ import android.location.LocationManager
 class ChatFragment:Fragment() {
 
 
-    private var mGroup: Group? = null
-    private var mUser: User? = null
+    private lateinit var mUser: User
+    private lateinit var mGroup: Group
     private var mChatListView: ListView? = null
     private var mCurrentLocation: Location? = null
     private var mOldLocation: Location? = null
@@ -42,13 +42,8 @@ class ChatFragment:Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (arguments == null) {
-            println("arg null")
-        }
-        val args = arguments
-        mGroup = args.getSerializable("mGroup") as Group?
-        mUser = args.getSerializable("mUser") as User?
-
+        mUser = arguments.getSerializable("mUser") as User
+        mGroup = arguments.getSerializable("mGroup") as Group
     }
 
     private fun getLocation(){
@@ -106,14 +101,16 @@ class ChatFragment:Fragment() {
 
         chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
         chatFragment_input_chatBar.setSendClickListener {
-            val message = chatFragment_input_chatBar.messageText
-            val userName = mUser!!.getUsername()
-            val userID = mUser!!.getId()
+            val message = Message()
+            message.setUser(mUser.getUsername())
+            message.setMessage(chatFragment_input_chatBar.messageText)
 
             FirebaseDatabase.getInstance()
-                    .getReference("groups").child(mGroup!!.getId()).child("messages")
+                    .getReference("messagesTest")
+                    .child(mGroup.getId())
                     .push()
-                    .setValue(Message(userID, userName, message))
+                    .setValue(message)
+
             getLocation()
         }
 
@@ -124,7 +121,7 @@ class ChatFragment:Fragment() {
         // Fetch and create List view for holding chat and its adapter
         mChatListView = chatFragment_msgWindow_listView
 
-        val fireBaseDataBaseRef = FirebaseDatabase.getInstance().getReference("groups").child(mGroup!!.getId()).child("messages")
+        val fireBaseDataBaseRef = FirebaseDatabase.getInstance().getReference("messagesTest").child(mGroup.getId())
         val fireBaseAdapter = object : FirebaseListAdapter<Message>(activity, Message::class.java,
                 R.layout.message, fireBaseDataBaseRef) {
             override fun populateView(v: View, model: Message, position: Int) {

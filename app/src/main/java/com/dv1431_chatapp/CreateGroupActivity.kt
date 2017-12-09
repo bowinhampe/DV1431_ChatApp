@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.dv1431_chatapp.database.ChatGroup
-import com.dv1431_chatapp.database.IdMap
+import com.dv1431_chatapp.database.RelationMap
 import com.dv1431_chatapp.database.User
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_create_group.*
@@ -14,7 +14,7 @@ import com.google.firebase.database.ValueEventListener
 class CreateGroupActivity : AppCompatActivity() {
     private lateinit var mUserAdapter: UserListAdapter
     private lateinit var mUserList: ArrayList<String>
-    private lateinit var mUserIds: IdMap
+    private lateinit var mUserIds: RelationMap
     private lateinit var mUser: User
 
     private lateinit var mRetrieveUserIdListener: ValueEventListener
@@ -24,8 +24,8 @@ class CreateGroupActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_group)
         initiateGUIComponents()
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
-        mUserIds = IdMap()
-        mUserIds.put(mUser.getId(), "N/A")
+        mUserIds = RelationMap()
+        mUserIds.put(mUser.getId(), true)
 
         val context = this
         mRetrieveUserIdListener = object: ValueEventListener {
@@ -37,7 +37,7 @@ class CreateGroupActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot?) {
                 if (snapshot?.value != null) {
                     snapshot.children.forEach {
-                        mUserIds.put(it.key, "N/A")
+                        mUserIds.put(it.key, true)
                         if (it.value is HashMap<*, *>) {
                             val hashMap = it.value as HashMap<String, String>
                             mUserList.add(hashMap.getValue("email"))
@@ -55,7 +55,7 @@ class CreateGroupActivity : AppCompatActivity() {
         val userEmail = createGroupActivity_userEmail_edtxt.text.toString()
 
         // Query user email and if exists retrieve user id
-        val userQueryRef = FirebaseDatabase.getInstance().getReference("users").orderByChild("email").equalTo(userEmail)
+        val userQueryRef = FirebaseDatabase.getInstance().getReference("usersTest").orderByChild("email").equalTo(userEmail)
         userQueryRef.addListenerForSingleValueEvent(mRetrieveUserIdListener)
     }
 
@@ -82,15 +82,15 @@ class CreateGroupActivity : AppCompatActivity() {
         group.setUsers(mUserIds)
 
         // Generate a unique reference as group id
-        val groupsRef = FirebaseDatabase.getInstance().getReference("groups")
+        val groupsRef = FirebaseDatabase.getInstance().getReference("groupsTest")
         val newGroupRef = groupsRef.push()
 
         // Add group to the generated group id
         newGroupRef.setValue(group)
 
         // Add groupId to assigned users
-        val groupId = IdMap(newGroupRef.key, "N/A")
-        val usersRef = FirebaseDatabase.getInstance().getReference("users")
+        val groupId = RelationMap(newGroupRef.key, true)
+        val usersRef = FirebaseDatabase.getInstance().getReference("usersTest")
         mUserIds.forEach {
             usersRef.child(it.key).child("groups").updateChildren(groupId)
         }

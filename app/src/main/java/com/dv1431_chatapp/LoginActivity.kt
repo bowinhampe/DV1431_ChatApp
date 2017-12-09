@@ -8,14 +8,13 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.dv1431_chatapp.database.DatabaseHandler
-import com.dv1431_chatapp.database.OnCompleteListener
-import com.dv1431_chatapp.database.OnDataChangeListener
+import com.dv1431_chatapp.database.FirebaseHandler
 import com.dv1431_chatapp.database.User
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class LoginActivity : AppCompatActivity() {
 
@@ -45,37 +44,33 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login() {
+        mProgressBar.visibility = View.VISIBLE
+
         val email = loginActivity_usrname_edtxt.text.toString()
         val password = loginActivity_pw_edtxt.text.toString()
 
-        val context = this
+        val auth = FirebaseAuth.getInstance()
 
-        DatabaseHandler().login(email, password, object : OnCompleteListener {
-            override fun onStart() {
-                //TODO: Make this work!
-                mProgressBar.visibility = View.VISIBLE
-            }
-
-            override fun onSuccess(task: Task<AuthResult>) {
-                retrieveUserFromDatabase(task.result.user.uid)
-            }
-
-            override fun onFail(task: Task<AuthResult>) {
-                Toast.makeText(context, "Authentication failed.",
-                        Toast.LENGTH_LONG).show()
-            }
-
-        })
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "signInWithEmail:success")
+                        val userId = auth.currentUser?.uid
+                        if (userId != null) retrieveUserFromDatabase(userId)
+                    } else {
+                        Log.w(TAG, "signInWithEmail:failure", task.exception)
+                        Toast.makeText(this, "Authentication failed.",
+                                Toast.LENGTH_LONG).show()
+                    }
+                }
     }
 
     private fun retrieveUserFromDatabase(userId: String) {
+        val userRef = FirebaseDatabase.getInstance().getReference("usersTest").child(userId)
+
         val context = this
-
-        DatabaseHandler().retrieveDataOnce("users/"+userId, object : OnDataChangeListener {
-            override fun onStart() {
-            }
-
-            override fun onChange(dataSnapshot: DataSnapshot) {
+        val retrieveUserListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val user = dataSnapshot.getValue<User>(User::class.java)
                 if (user != null) {
                     user.setId(dataSnapshot.key)
@@ -85,15 +80,18 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                 } else {
                     Log.w(TAG, "retrieveUserFromDatabase:failure")
+                    mProgressBar.visibility = View.GONE
                     Toast.makeText(context, "An error occurred. Please try again.",
                             Toast.LENGTH_LONG).show()
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                //DO SOME THING WHEN GET DATA FAILED HERE
+                // TODO: Log and toast error
             }
-        })
+        }
+
+        userRef.addListenerForSingleValueEvent(retrieveUserListener)
     }
 
     private fun register(){

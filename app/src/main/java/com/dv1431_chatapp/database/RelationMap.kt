@@ -2,7 +2,7 @@ package com.dv1431_chatapp.database
 
 import com.google.firebase.database.Exclude
 
-class IdMap() : HashMap<String, Any>() {
+class RelationMap() : HashMap<String, Any>() {
 
     constructor(key: String, value: Any) : this () {
         this.put(key, value)

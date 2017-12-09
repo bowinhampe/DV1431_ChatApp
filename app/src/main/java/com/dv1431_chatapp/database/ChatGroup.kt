@@ -3,53 +3,32 @@ package com.dv1431_chatapp.database
 import com.google.firebase.database.Exclude
 
 class ChatGroup : Group {
-    private var mUserIds: IdMap
-    private var mMessages: ArrayList<Message>
+    private var mUsers: RelationMap
 
     constructor() : super() {
-        mUserIds = IdMap()
-        mMessages = ArrayList()
+        mUsers = RelationMap()
     }
 
-    constructor(groupId: String, groupName: String, users: IdMap = IdMap(), messages: ArrayList<Message> = ArrayList()) : super(groupId, groupName) {
-        mUserIds = users
-        mMessages = messages
+    constructor(groupId: String, groupName: String, users: RelationMap = RelationMap()) : super(groupId, groupName) {
+        mUsers = users
     }
 
     @Exclude
     fun addUser(user: String) {
-        mUserIds.put(user, "N/A")
+        mUsers.put(user, true)
     }
 
     @Exclude
     fun removeUser(userId: String) : Any? {
-        return mUserIds.remove(userId)
+        return mUsers.remove(userId)
     }
 
-    @Exclude
-    fun addMessage(message: Message) {
-        mMessages.add(message)
+    fun getUsers() : RelationMap {
+        return mUsers
     }
 
-    @Exclude
-    fun removeMessage(message: Message) : Boolean {
-        return mMessages.remove(message)
-    }
-
-    fun getUsers() : IdMap {
-        return mUserIds
-    }
-
-    fun getMessages() : ArrayList<Message> {
-        return mMessages
-    }
-
-    fun setUsers(users: IdMap) {
-        mUserIds = users
-    }
-
-    fun setMessages(messages: ArrayList<Message>) {
-        mMessages = messages
+    fun setUsers(users: RelationMap) {
+        mUsers = users
     }
 
 }
