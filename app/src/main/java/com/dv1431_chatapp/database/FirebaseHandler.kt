@@ -5,40 +5,52 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import java.io.Serializable
 
-class FirebaseHandler : Serializable{
+class FirebaseHandler {
 
     companion object {
-
-        // Used for logging
-        private val TAG = LoginActivity::class.java.simpleName as String
-
-        private val mAuth = FirebaseAuth.getInstance()
-
-        fun login(email: String, password: String, listener: OnCompleteListener<AuthResult>) {
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(listener)
+        private val mFirebaseHandler: FirebaseHandler by lazy {
+            FirebaseHandler()
         }
 
-        fun retrieveDataOnce(databaseReference: String, listener: ValueEventListener) {
-            FirebaseDatabase.getInstance()
-                    .getReference(databaseReference)
-                    .addListenerForSingleValueEvent(listener)
+        fun getInstance(): FirebaseHandler {
+            return mFirebaseHandler
         }
+    }
 
-        // TODO: Test if faster than retrieveDataOnce
-        fun retrieveUser(userId: String, listener: ValueEventListener){
-            FirebaseDatabase.getInstance()
-                    .getReference("usersTest")
-                    .orderByKey()
-                    .equalTo(userId)
-                    .addListenerForSingleValueEvent(listener)
-        }
+    // Used for logging
+    private val TAG = LoginActivity::class.java.simpleName as String
 
-        fun getAuth() : FirebaseAuth {
-            return mAuth
-        }
+    private val mAuthentication = FirebaseAuth.getInstance()
+    private val mDatabase = FirebaseDatabase.getInstance()
 
+    fun login(email: String, password: String, listener: OnCompleteListener<AuthResult>) {
+        mAuthentication.signInWithEmailAndPassword(email, password).addOnCompleteListener(listener)
+    }
+
+    fun register(email: String, password: String, listener: OnCompleteListener<AuthResult>) {
+        mAuthentication.createUserWithEmailAndPassword(email, password).addOnCompleteListener(listener)
+    }
+
+    fun insertData(databaseReference: String, data: Any) {
+        mDatabase.getReference(databaseReference).setValue(data)
+    }
+
+    fun retrieveDataOnce(databaseReference: String, listener: ValueEventListener) {
+        mDatabase.getReference(databaseReference)
+                .addListenerForSingleValueEvent(listener)
+    }
+
+    // TODO: Test if faster than retrieveDataOnce
+    fun retrieveUser(userId: String, listener: ValueEventListener){
+        mDatabase.getReference("usersTest")
+                .orderByKey()
+                .equalTo(userId)
+                .addListenerForSingleValueEvent(listener)
+    }
+
+    fun getAuth() : FirebaseAuth {
+        return mAuthentication
     }
 
 }

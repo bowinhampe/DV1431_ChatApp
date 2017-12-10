@@ -11,18 +11,17 @@ import android.widget.Toast
 import com.dv1431_chatapp.database.FirebaseHandler
 import com.dv1431_chatapp.database.User
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 class LoginActivity : AppCompatActivity() {
 
     // For logging
     private val TAG = LoginActivity::class.java.simpleName as String
+
+
+    private val mFirebaseHandler = FirebaseHandler.getInstance()
 
     private lateinit var mProgressBar: ProgressBar
 
@@ -52,10 +51,10 @@ class LoginActivity : AppCompatActivity() {
         val email = loginActivity_usrname_edtxt.text.toString()
         val password = loginActivity_pw_edtxt.text.toString()
 
-        FirebaseHandler.login(email, password, OnCompleteListener { task ->
+        mFirebaseHandler.login(email, password, OnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "signInWithEmail:success")
-                val userId = FirebaseHandler.getAuth().currentUser?.uid
+                val userId = mFirebaseHandler.getAuth().currentUser?.uid
                 if (userId != null) retrieveUserFromDatabase(userId)
             } else {
                 Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -68,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
     private fun retrieveUserFromDatabase(userId: String) {
         val context = this
 
-        FirebaseHandler.retrieveDataOnce("usersTest/"+userId, object: ValueEventListener {
+        mFirebaseHandler.retrieveDataOnce("usersTest/"+userId, object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 // TODO: Log and toast error
             }
@@ -88,7 +87,6 @@ class LoginActivity : AppCompatActivity() {
                             Toast.LENGTH_LONG).show()
                 }
             }
-
         })
     }
 

@@ -6,14 +6,16 @@ import android.os.Bundle
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_register.*
 import android.widget.Toast
+import com.dv1431_chatapp.database.FirebaseHandler
 import com.dv1431_chatapp.database.User
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.android.gms.tasks.OnCompleteListener
 
 class RegisterActivity : AppCompatActivity() {
 
     // For logging
     private val TAG = RegisterActivity::class.java.simpleName as String
+    
+    private val mFirebaseHandler = FirebaseHandler.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,34 +36,26 @@ class RegisterActivity : AppCompatActivity() {
         val password = registerActivity_pw_edtxt.text.toString()
         val username = registerActivity_usrname_edtxt.text.toString()
 
-        //validateCredentials()
+        // TODO: Validate credentials?
 
         val context = this
-
-        val auth = FirebaseAuth.getInstance()
-
-        auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "createUserWithEmail:success")
-                        val userId = auth.currentUser?.uid
-                        if (userId != null) {
-                            val user = User(userId, email, username)
-                            addUserToDatabase(user)
-                            val intent = Intent(context, MainActivity::class.java)
-                            intent.putExtra(User::class.java.simpleName, user)
-                            startActivity(intent)
-                        }
-                    } else {
-                        Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                        Toast.makeText(context, "Authentication failed.",
-                                Toast.LENGTH_LONG).show()
-                    }
+        mFirebaseHandler.register(email, password, OnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "createUserWithEmail:success")
+                val userId = mFirebaseHandler.getAuth().currentUser?.uid
+                if (userId != null) {
+                    val user = User(userId, email, username)
+                    mFirebaseHandler.insertData("usersTest/"+userId, user)
+                    val intent = Intent(context, MainActivity::class.java)
+                    intent.putExtra(User::class.java.simpleName, user)
+                    startActivity(intent)
                 }
-    }
-
-    private fun addUserToDatabase(user: User) {
-        FirebaseDatabase.getInstance().getReference("usersTest").child(user.getId()).setValue(user)
+            } else {
+                Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                Toast.makeText(context, "Authentication failed.",
+                        Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
 }
