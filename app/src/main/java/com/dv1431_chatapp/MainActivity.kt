@@ -90,39 +90,6 @@ class MainActivity : AppCompatActivity() {
                 // TODO: Remove group from list
             }
         })
-
-        /*val ref = FirebaseDatabase.getInstance().getReference("usersTest").child(mUser.getId()).child("groups")
-
-        ref.addChildEventListener(object : ChildEventListener {
-            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            // Retrieve the group id of the group that a user is added to
-            override fun onChildAdded(dataSnapshot: DataSnapshot?, previousChildKey: String?) {
-                val groupId = dataSnapshot?.key
-                if (groupId != null) {
-                    if (!mUser.getGroups().containsKey(groupId)) {
-                        mFirebaseHandler.retrieveDataOnce("groupsTest/"+groupId, mRetrieveGroupListener)
-                    }
-                } else {
-                    println("NULL")
-                }
-            }
-
-            // Get the data on a post that has been removed
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                // TODO: Remove group from list
-            }
-
-            override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })*/
     }
 
     private fun requestPermission(){

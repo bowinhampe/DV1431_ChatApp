@@ -58,8 +58,6 @@ class CreateGroupActivity : AppCompatActivity() {
         val userEmail = createGroupActivity_userEmail_edtxt.text.toString()
 
         // Query user email and if exists retrieve user id
-        //val userQueryRef = FirebaseDatabase.getInstance().getReference("usersTest").orderByChild("email").equalTo(userEmail)
-        //userQueryRef.addListenerForSingleValueEvent(mRetrieveUserIdListener)
         val userQueryRef = mFirebaseHandler.getReference("usersTest")
                 .orderByChild("email")
                 .equalTo(userEmail)

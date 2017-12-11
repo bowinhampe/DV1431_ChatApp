@@ -109,12 +109,6 @@ class ChatFragment:Fragment() {
             mFirebaseHandler.createRef("messagesTest/"+mGroup.getId())
                     .setValue(message)
 
-            /*FirebaseDatabase.getInstance()
-                    .getReference("messagesTest")
-                    .child(mGroup.getId())
-                    .push()
-                    .setValue(message)*/
-
             getLocation()
         }
 
