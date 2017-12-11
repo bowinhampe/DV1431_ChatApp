@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.dv1431_chatapp.database.FirebaseHandler
 import com.dv1431_chatapp.database.Group
 import com.dv1431_chatapp.database.User
 import com.google.firebase.database.DataSnapshot
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mUser: User
     private var mGroups: ArrayList<Group> = ArrayList()
     var mSelectedGroupNumber = -1
+
+    private val mFirebaseHandler = FirebaseHandler.getInstance()
 
     private val mRetrieveGroupListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -59,8 +62,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addUserGroupsEventListener() {
-        // Get a reference to our posts
-        val ref = FirebaseDatabase.getInstance().getReference("usersTest").child(mUser.getId()).child("groups")
+        mFirebaseHandler.retrieveChildData("usersTest/"+mUser.getId()+"/groups", object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildAdded(dataSnapshot: DataSnapshot?, previousChildKey: String?) {
+                val groupId = dataSnapshot?.key
+                if (groupId != null) {
+                    if (!mUser.getGroups().containsKey(groupId)) {
+                        mFirebaseHandler.retrieveDataOnce("groupsTest/"+groupId, mRetrieveGroupListener)
+                    }
+                } else {
+                    println("NULL")
+                }
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot?) {
+                // TODO: Remove group from list
+            }
+        })
+
+        /*val ref = FirebaseDatabase.getInstance().getReference("usersTest").child(mUser.getId()).child("groups")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
@@ -76,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                 val groupId = dataSnapshot?.key
                 if (groupId != null) {
                     if (!mUser.getGroups().containsKey(groupId)) {
-                        retrieveGroup(groupId)
+                        mFirebaseHandler.retrieveDataOnce("groupsTest/"+groupId, mRetrieveGroupListener)
                     }
                 } else {
                     println("NULL")
@@ -91,7 +122,7 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(p0: DatabaseError?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-        })
+        })*/
     }
 
     private fun requestPermission(){
@@ -113,15 +144,16 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun retrieveGroup(groupId: String) {
+    /*private fun retrieveGroup(groupId: String) {
         FirebaseDatabase.getInstance().getReference("groupsTest").child(groupId).addListenerForSingleValueEvent(mRetrieveGroupListener)
-    }
+    }*/
 
     private fun initiateGroupList() {
         // TODO: limit listener to groups where the user has access to
         for (grp in mUser.getGroups()) {
             // Add listener for every group the user is in
-            retrieveGroup(grp.key)
+            //retrieveGroup(grp.key)
+            mFirebaseHandler.retrieveDataOnce("groupsTest/"+grp.key, mRetrieveGroupListener)
         }
     }
 

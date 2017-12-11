@@ -26,7 +26,7 @@ import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 import android.location.LocationManager
-
+import com.dv1431_chatapp.database.FirebaseHandler
 
 
 class ChatFragment:Fragment() {
@@ -38,6 +38,7 @@ class ChatFragment:Fragment() {
     private var mCurrentLocation: Location? = null
     private var mOldLocation: Location? = null
 
+    private val mFirebaseHandler = FirebaseHandler.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,11 +106,14 @@ class ChatFragment:Fragment() {
             message.setUser(mUser.getUsername())
             message.setMessage(chatFragment_input_chatBar.messageText)
 
-            FirebaseDatabase.getInstance()
+            mFirebaseHandler.createRef("messagesTest/"+mGroup.getId())
+                    .setValue(message)
+
+            /*FirebaseDatabase.getInstance()
                     .getReference("messagesTest")
                     .child(mGroup.getId())
                     .push()
-                    .setValue(message)
+                    .setValue(message)*/
 
             getLocation()
         }
@@ -121,7 +125,7 @@ class ChatFragment:Fragment() {
         // Fetch and create List view for holding chat and its adapter
         mChatListView = chatFragment_msgWindow_listView
 
-        val fireBaseDataBaseRef = FirebaseDatabase.getInstance().getReference("messagesTest").child(mGroup.getId())
+        val fireBaseDataBaseRef = mFirebaseHandler.getReference("messagesTest/"+mGroup.getId())
         val fireBaseAdapter = object : FirebaseListAdapter<Message>(activity, Message::class.java,
                 R.layout.message, fireBaseDataBaseRef) {
             override fun populateView(v: View, model: Message, position: Int) {

@@ -42,7 +42,7 @@ class RegisterActivity : AppCompatActivity() {
         mFirebaseHandler.register(email, password, OnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "createUserWithEmail:success")
-                val userId = mFirebaseHandler.getAuth().currentUser?.uid
+                val userId = mFirebaseHandler.getCurrentUserId()
                 if (userId != null) {
                     val user = User(userId, email, username)
                     mFirebaseHandler.insertData("usersTest/"+userId, user)

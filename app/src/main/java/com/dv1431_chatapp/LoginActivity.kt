@@ -20,7 +20,6 @@ class LoginActivity : AppCompatActivity() {
     // For logging
     private val TAG = LoginActivity::class.java.simpleName as String
 
-
     private val mFirebaseHandler = FirebaseHandler.getInstance()
 
     private lateinit var mProgressBar: ProgressBar
@@ -34,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
     private fun initiateGUIComponents(){
         loginActivity_login_btn.setOnClickListener {
             // Start the main app activity
-            login()
+            signIn()
         }
         loginActivity_register_btn.setOnClickListener {
             // Start a register Fragment
@@ -45,16 +44,16 @@ class LoginActivity : AppCompatActivity() {
         mProgressBar.isIndeterminate = true
     }
 
-    private fun login() {
+    private fun signIn() {
         mProgressBar.visibility = View.VISIBLE
 
         val email = loginActivity_usrname_edtxt.text.toString()
         val password = loginActivity_pw_edtxt.text.toString()
 
-        mFirebaseHandler.login(email, password, OnCompleteListener { task ->
+        mFirebaseHandler.signIn(email, password, OnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "signInWithEmail:success")
-                val userId = mFirebaseHandler.getAuth().currentUser?.uid
+                val userId = mFirebaseHandler.getCurrentUserId()
                 if (userId != null) retrieveUserFromDatabase(userId)
             } else {
                 Log.w(TAG, "signInWithEmail:failure", task.exception)

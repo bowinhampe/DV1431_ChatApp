@@ -24,21 +24,46 @@ class FirebaseHandler {
     private val mAuthentication = FirebaseAuth.getInstance()
     private val mDatabase = FirebaseDatabase.getInstance()
 
-    fun login(email: String, password: String, listener: OnCompleteListener<AuthResult>) {
+    fun register(email: String, password: String, listener: OnCompleteListener<AuthResult>) {
+        mAuthentication.createUserWithEmailAndPassword(email, password).addOnCompleteListener(listener)
+    }
+
+    fun signIn(email: String, password: String, listener: OnCompleteListener<AuthResult>) {
         mAuthentication.signInWithEmailAndPassword(email, password).addOnCompleteListener(listener)
     }
 
-    fun register(email: String, password: String, listener: OnCompleteListener<AuthResult>) {
-        mAuthentication.createUserWithEmailAndPassword(email, password).addOnCompleteListener(listener)
+    fun signOut() {
+        mAuthentication.signOut()
     }
 
     fun insertData(databaseReference: String, data: Any) {
         mDatabase.getReference(databaseReference).setValue(data)
     }
 
+    fun updateData(databaseReference: String, data: Map<String, Any>) {
+        mDatabase.getReference(databaseReference).updateChildren(data)
+    }
+
+    fun createRef(databaseReference: String) : DatabaseReference {
+        return mDatabase.getReference(databaseReference).push()
+    }
+
     fun retrieveDataOnce(databaseReference: String, listener: ValueEventListener) {
         mDatabase.getReference(databaseReference)
                 .addListenerForSingleValueEvent(listener)
+    }
+
+    fun retrieveChildData(databaseReference: String, listener: ChildEventListener) {
+        mDatabase.getReference(databaseReference)
+                .addChildEventListener(listener)
+    }
+
+    fun getReference(databaseReference: String) : DatabaseReference {
+        return mDatabase.getReference(databaseReference)
+    }
+
+    fun retrieveQueryDataOnce(query: Query, listener: ValueEventListener) {
+        query.addListenerForSingleValueEvent(listener)
     }
 
     // TODO: Test if faster than retrieveDataOnce
@@ -49,8 +74,8 @@ class FirebaseHandler {
                 .addListenerForSingleValueEvent(listener)
     }
 
-    fun getAuth() : FirebaseAuth {
-        return mAuthentication
+    fun getCurrentUserId() : String? {
+        return mAuthentication.currentUser?.uid
     }
 
 }
