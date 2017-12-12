@@ -67,7 +67,7 @@ class FirebaseHandler {
     }
 
     // TODO: Test if faster than retrieveDataOnce
-    fun retrieveUserEmail(userId: String, listener: ValueEventListener){
+    fun retrieveUser(userId: String, listener: ValueEventListener){
         mDatabase.getReference("usersTest")
                 .orderByKey()
                 .equalTo(userId)
@@ -90,7 +90,7 @@ class FirebaseHandler {
         }
     }
 
-    fun addUserEmailListener(email: String , listener: ValueEventListener) {
+    fun retrieveUserEmail(email: String , listener: ValueEventListener) {
         mFirebaseHandler.getReference("usersTest")
                 .orderByChild("email")
                 .equalTo(email)
