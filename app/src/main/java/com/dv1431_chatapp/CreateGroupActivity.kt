@@ -43,7 +43,12 @@ class CreateGroupActivity : AppCompatActivity() {
                         mUserIds.put(it.key, true)
                         if (it.value is HashMap<*, *>) {
                             val hashMap = it.value as HashMap<String, String>
-                            mUserList.add(hashMap.getValue("email"))
+                            val email = hashMap.getValue("email")
+                            if (!mUserList.contains(email))
+                                mUserList.add(email)
+                            else
+                                Toast.makeText(context, "User already in group",
+                                        Toast.LENGTH_LONG).show()
                         }
                     }
                 } else {
