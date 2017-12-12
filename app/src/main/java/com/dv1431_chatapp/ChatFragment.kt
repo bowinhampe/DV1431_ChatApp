@@ -53,6 +53,32 @@ class ChatFragment:Fragment() {
         val args = arguments
         mGroup = args.getSerializable("mGroup") as Group?
         mUser = args.getSerializable("mUser") as User?
+
+        // Acquire a reference to the system Location Manager
+        mLocationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        // Define a listener that responds to location updates
+        mLocationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                // Called when a new location is found by the network location provider.
+                println(location.latitude)
+                println(location.longitude)
+                if(mOldLocation == null){
+                    mCurrentLocation = location
+                    mOldLocation = mCurrentLocation
+                }
+                else {
+                    mOldLocation = mCurrentLocation
+                    mCurrentLocation = location
+                }
+            }
+
+            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+
+            override fun onProviderEnabled(provider: String) {}
+
+            override fun onProviderDisabled(provider: String) {}
+        }
     }
 
 
@@ -71,7 +97,7 @@ class ChatFragment:Fragment() {
         }
         else {
             if (mOldLocation!!.latitude != mCurrentLocation!!.latitude) {
-                locationManager.removeUpdates(locationListener)
+                locationManager.removeUpdates(locationList
             }
         }*/
 
