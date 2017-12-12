@@ -85,7 +85,7 @@ class CreateGroupActivity : AppCompatActivity() {
     private fun createGroup() {
         val group = ChatGroup()
         group.setName(createGroupActivity_grpName_edtxt.text.toString())
-        group.setUsers(mUserIds)
+        group.setMembers(mUserIds)
 
         mFirebaseHandler.createGroup(group)
 

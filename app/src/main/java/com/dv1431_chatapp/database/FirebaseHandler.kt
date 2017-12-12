@@ -85,7 +85,7 @@ class FirebaseHandler {
         val key = ref.key
 
         val groupId = RelationMap(key, true)
-        group.getUsers().forEach {
+        group.getMembers().forEach {
             mFirebaseHandler.updateData("users/"+it.key+"/groups", groupId)
         }
     }
