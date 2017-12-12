@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
     private fun retrieveUserFromDatabase(userId: String) {
         val context = this
 
-        mFirebaseHandler.retrieveDataOnce("usersTest/"+userId, object: ValueEventListener {
+        mFirebaseHandler.retrieveDataOnce("users/"+userId, object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 // TODO: Log and toast error
             }

@@ -3,32 +3,32 @@ package com.dv1431_chatapp.database
 import com.google.firebase.database.Exclude
 
 class ChatGroup : Group {
-    private var mUsers: RelationMap
+    private var mMembers: RelationMap
 
     constructor() : super() {
-        mUsers = RelationMap()
+        mMembers = RelationMap()
     }
 
     constructor(groupId: String, groupName: String, users: RelationMap = RelationMap()) : super(groupId, groupName) {
-        mUsers = users
+        mMembers = users
     }
 
     @Exclude
-    fun addUser(user: String) {
-        mUsers.put(user, true)
+    fun addMember(user: String) {
+        mMembers.put(user, true)
     }
 
     @Exclude
-    fun removeUser(userId: String) : Any? {
-        return mUsers.remove(userId)
+    fun removeMember(userId: String) : Any? {
+        return mMembers.remove(userId)
     }
 
-    fun getUsers() : RelationMap {
-        return mUsers
+    fun getMembers() : RelationMap {
+        return mMembers
     }
 
-    fun setUsers(users: RelationMap) {
-        mUsers = users
+    fun setMembers(users: RelationMap) {
+        mMembers = users
     }
 
 }

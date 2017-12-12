@@ -68,7 +68,7 @@ class FirebaseHandler {
 
     // TODO: Test if faster than retrieveDataOnce
     fun retrieveUser(userId: String, listener: ValueEventListener){
-        mDatabase.getReference("usersTest")
+        mDatabase.getReference("users")
                 .orderByKey()
                 .equalTo(userId)
                 .addListenerForSingleValueEvent(listener)
@@ -79,19 +79,19 @@ class FirebaseHandler {
     }
 
     fun createGroup(group: ChatGroup) {
-        val ref = mFirebaseHandler.createRef("groupsTest")
+        val ref = mFirebaseHandler.createRef("groups")
         ref.setValue(group)
 
         val key = ref.key
 
         val groupId = RelationMap(key, true)
         group.getUsers().forEach {
-            mFirebaseHandler.updateData("usersTest/"+it.key+"/groups", groupId)
+            mFirebaseHandler.updateData("users/"+it.key+"/groups", groupId)
         }
     }
 
     fun retrieveUserEmail(email: String , listener: ValueEventListener) {
-        mFirebaseHandler.getReference("usersTest")
+        mFirebaseHandler.getReference("users")
                 .orderByChild("email")
                 .equalTo(email)
                 .addListenerForSingleValueEvent(listener)

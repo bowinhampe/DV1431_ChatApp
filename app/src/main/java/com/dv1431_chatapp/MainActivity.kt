@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addUserGroupsEventListener() {
-        mFirebaseHandler.retrieveChildData("usersTest/"+mUser.getId()+"/groups", object : ChildEventListener {
+        mFirebaseHandler.retrieveChildData("users/"+mUser.getId()+"/groups", object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                 val groupId = dataSnapshot?.key
                 if (groupId != null) {
                     if (!mUser.getGroups().containsKey(groupId)) {
-                        mFirebaseHandler.retrieveDataOnce("groupsTest/"+groupId, mRetrieveGroupListener)
+                        mFirebaseHandler.retrieveDataOnce("groups/"+groupId, mRetrieveGroupListener)
                     }
                 } else {
                     println("NULL")
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         for (grp in mUser.getGroups()) {
             // Add listener for every group the user is in
             //retrieveGroup(grp.key)
-            mFirebaseHandler.retrieveDataOnce("groupsTest/"+grp.key, mRetrieveGroupListener)
+            mFirebaseHandler.retrieveDataOnce("groups/"+grp.key, mRetrieveGroupListener)
         }
     }
 

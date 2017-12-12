@@ -31,7 +31,6 @@ import com.dv1431_chatapp.database.FirebaseHandler
 
 class ChatFragment:Fragment() {
 
-
     private lateinit var mUser: User
     private lateinit var mGroup: Group
     private var mChatListView: ListView? = null
@@ -106,7 +105,7 @@ class ChatFragment:Fragment() {
             message.setUser(mUser.getUsername())
             message.setMessage(chatFragment_input_chatBar.messageText)
 
-            mFirebaseHandler.createRef("messagesTest/"+mGroup.getId())
+            mFirebaseHandler.createRef("messages/"+mGroup.getId())
                     .setValue(message)
 
             getLocation()
@@ -119,7 +118,7 @@ class ChatFragment:Fragment() {
         // Fetch and create List view for holding chat and its adapter
         mChatListView = chatFragment_msgWindow_listView
 
-        val fireBaseDataBaseRef = mFirebaseHandler.getReference("messagesTest/"+mGroup.getId())
+        val fireBaseDataBaseRef = mFirebaseHandler.getReference("messages/"+mGroup.getId())
         val fireBaseAdapter = object : FirebaseListAdapter<Message>(activity, Message::class.java,
                 R.layout.message, fireBaseDataBaseRef) {
             override fun populateView(v: View, model: Message, position: Int) {

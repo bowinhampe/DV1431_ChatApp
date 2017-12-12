@@ -45,7 +45,7 @@ class RegisterActivity : AppCompatActivity() {
                 val userId = mFirebaseHandler.getCurrentUserId()
                 if (userId != null) {
                     val user = User(userId, email, username)
-                    mFirebaseHandler.insertData("usersTest/"+userId, user)
+                    mFirebaseHandler.insertData("users/"+userId, user)
                     val intent = Intent(context, MainActivity::class.java)
                     intent.putExtra(User::class.java.simpleName, user)
                     startActivity(intent)
