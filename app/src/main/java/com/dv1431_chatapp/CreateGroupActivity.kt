@@ -55,13 +55,14 @@ class CreateGroupActivity : AppCompatActivity() {
     }
 
     private fun addUser() {
-        val userEmail = createGroupActivity_userEmail_edtxt.text.toString()
+        val email = createGroupActivity_userEmail_edtxt.text.toString()
 
         // Query user email and if exists retrieve user id
-        val userQueryRef = mFirebaseHandler.getReference("usersTest")
+        /*val userQueryRef = mFirebaseHandler.getReference("usersTest")
                 .orderByChild("email")
-                .equalTo(userEmail)
-        mFirebaseHandler.retrieveQueryDataOnce(userQueryRef, mRetrieveUserIdListener)
+                .equalTo(email)
+        mFirebaseHandler.retrieveQueryDataOnce(userQueryRef, mRetrieveUserIdListener)*/
+        mFirebaseHandler.retrieveUserEmail(email, mRetrieveUserIdListener)
     }
 
     private fun initiateGUIComponents(){
@@ -86,6 +87,12 @@ class CreateGroupActivity : AppCompatActivity() {
         group.setName(createGroupActivity_grpName_edtxt.text.toString())
         group.setUsers(mUserIds)
 
+        mFirebaseHandler.createGroup(group)
+
+        /*val group = ChatGroup()
+        group.setName(createGroupActivity_grpName_edtxt.text.toString())
+        group.setUsers(mUserIds)
+
         val ref = mFirebaseHandler.createRef("groupsTest")
         ref.setValue(group)
 
@@ -94,7 +101,7 @@ class CreateGroupActivity : AppCompatActivity() {
         val groupId = RelationMap(key, true)
         mUserIds.forEach {
             mFirebaseHandler.updateData("usersTest/"+it.key+"/groups", groupId)
-        }
+        }*/
 
         finish()
     }
