@@ -35,7 +35,7 @@
              android:id="@+id/loginActivity_usrname_edtxt"
              android:layout_above="@id/loginActivity_pw_edtxt"
              android:hint="@string/edtxt_email"
-             android:text="asd@asd.asd"
+             android:text="test@chat.app"
              android:layout_centerInParent="true"/>
 
          <EditText
@@ -43,7 +43,7 @@
              android:layout_height="50dp"
              android:hint="@string/edtxt_pw"
              android:id="@+id/loginActivity_pw_edtxt"
-             android:text="asdasd"
+             android:text="pwd123"
              android:layout_centerInParent="true"/>
 
          <Button

@@ -26,7 +26,7 @@ import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 import android.location.LocationManager
-
+import com.dv1431_chatapp.database.FirebaseHandler
 
 
 class ChatFragment:Fragment() {
@@ -42,6 +42,7 @@ class ChatFragment:Fragment() {
     private var mLocationListener: LocationListener? = null
     private var mLocationManager: LocationManager? = null
 
+    private val mFirebaseHandler = FirebaseHandler.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,33 +53,6 @@ class ChatFragment:Fragment() {
         val args = arguments
         mGroup = args.getSerializable("mGroup") as Group?
         mUser = args.getSerializable("mUser") as User?
-
-        // Define a listener that responds to location updates
-        mLocationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                // Called when a new location is found by the network location provider.
-                println(location.latitude)
-                println(location.longitude)
-
-                /*if(mOldLocation == null){
-                    mCurrentLocation = location
-                    mOldLocation = mCurrentLocation
-                }
-                else {
-                    mOldLocation = mCurrentLocation
-                    mCurrentLocation = location
-                }*/
-            }
-
-            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-
-            override fun onProviderEnabled(provider: String) {}
-
-            override fun onProviderDisabled(provider: String) {}
-        }
-        // Acquire a reference to the system Location Manager
-        mLocationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
     }
 
 
@@ -86,7 +60,7 @@ class ChatFragment:Fragment() {
         // TODO: THIS NEEDS TO WORK, somehow LOCATIONS doesnt update.
         // Register the listener with the Location Manager to receive location updates
         try {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, mLocationListener)
+            mLocationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, mLocationListener)
         }
         catch (e: SecurityException){
             println("Get_Location_Exception:" + e.toString())
@@ -110,14 +84,13 @@ class ChatFragment:Fragment() {
 
         chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
         chatFragment_input_chatBar.setSendClickListener {
-            val message = chatFragment_input_chatBar.messageText
-            val userName = mUser!!.getUsername()
-            val userID = mUser!!.getId()
+            val message = Message()
+            message.setUser(mUser!!.getUsername())
+            message.setMessage(chatFragment_input_chatBar.messageText)
 
-            FirebaseDatabase.getInstance()
-                    .getReference("groups").child(mGroup!!.getId()).child("messages")
-                    .push()
-                    .setValue(Message(userID, userName, message))
+            mFirebaseHandler.createRef("messages/"+mGroup!!.getId())
+                    .setValue(message)
+
             getLocation()
         }
 
@@ -128,7 +101,7 @@ class ChatFragment:Fragment() {
         // Fetch and create List view for holding chat and its adapter
         mChatListView = chatFragment_msgWindow_listView
 
-        val fireBaseDataBaseRef = FirebaseDatabase.getInstance().getReference("groups").child(mGroup!!.getId()).child("messages")
+        val fireBaseDataBaseRef = mFirebaseHandler.getReference("messages/"+mGroup!!.getId())
         val fireBaseAdapter = object : FirebaseListAdapter<Message>(activity, Message::class.java,
                 R.layout.message, fireBaseDataBaseRef) {
             override fun populateView(v: View, model: Message, position: Int) {

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.dv1431_chatapp.database.FirebaseHandler
 import com.dv1431_chatapp.database.Group
 import com.dv1431_chatapp.database.User
 import com.google.firebase.database.DataSnapshot
@@ -26,9 +27,10 @@ class MainActivity : AppCompatActivity() {
     private var mGroups: ArrayList<Group> = ArrayList()
     var mSelectedGroupNumber = -1
 
+    private val mFirebaseHandler = FirebaseHandler.getInstance()
+
     private val mRetrieveGroupListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-
             // Get group from user's group list
             val group = dataSnapshot.getValue<Group>(Group::class.java)
             if (group != null) {
@@ -53,7 +55,6 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
-
         initiateGroupList()
         addUserGroupsEventListener()
         requestPermission()
@@ -61,10 +62,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addUserGroupsEventListener() {
-        // Get a reference to our posts
-        val ref = FirebaseDatabase.getInstance().getReference("users").child(mUser.getId()).child("groups")
+        mFirebaseHandler.retrieveChildData("users/"+mUser.getId()+"/groups", object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
 
-        ref.addChildEventListener(object : ChildEventListener {
             override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -73,26 +75,19 @@ class MainActivity : AppCompatActivity() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            // Retrieve the group id of the group that a user is added to
             override fun onChildAdded(dataSnapshot: DataSnapshot?, previousChildKey: String?) {
                 val groupId = dataSnapshot?.key
                 if (groupId != null) {
                     if (!mUser.getGroups().containsKey(groupId)) {
-                        retrieveGroup(groupId)
+                        mFirebaseHandler.retrieveDataOnce("groups/"+groupId, mRetrieveGroupListener)
                     }
                 } else {
                     println("NULL")
                 }
             }
 
-            // Get the data on a post that has been removed
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                val title = dataSnapshot.child("title").value as String?
-                // Remove group from list
-            }
-
-            override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun onChildRemoved(p0: DataSnapshot?) {
+                // TODO: Remove group from list
             }
         })
     }
@@ -116,15 +111,16 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun retrieveGroup(groupId: String) {
-        FirebaseDatabase.getInstance().getReference("groups").child(groupId).addListenerForSingleValueEvent(mRetrieveGroupListener)
-    }
+    /*private fun retrieveGroup(groupId: String) {
+        FirebaseDatabase.getInstance().getReference("groupsTest").child(groupId).addListenerForSingleValueEvent(mRetrieveGroupListener)
+    }*/
 
     private fun initiateGroupList() {
         // TODO: limit listener to groups where the user has access to
         for (grp in mUser.getGroups()) {
             // Add listener for every group the user is in
-            retrieveGroup(grp.key)
+            //retrieveGroup(grp.key)
+            mFirebaseHandler.retrieveDataOnce("groups/"+grp.key, mRetrieveGroupListener)
         }
     }
 
@@ -134,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         val groupListView = mainActivity_grp_listView
         val groupNames = ArrayList<String>()
 
-        mGroups.forEach() {
+        mGroups.forEach {
             groupNames.add(it.getName())
         }
 
@@ -155,7 +151,6 @@ class MainActivity : AppCompatActivity() {
         // TODO: Use group "position" from listView click to create a chat window with the specified group.
         // EXAMPLE CODE
         val selectedGroup = mGroups.get(groupPos)
-        //intent.putExtra("groupName", specifiedGroup)
 
         val intent = Intent(this, GroupInteractionActivity::class.java)
         intent.putExtra(User::class.java.simpleName, mUser)

@@ -7,20 +7,20 @@ class User : Serializable {
     private var mId: String
     private var mEmail: String
     private var mUsername: String
-    private var mGroupIds: IdMap
+    private var mGroups: RelationMap
 
     constructor() {
         mId = "N/A"
         mEmail = "N/A"
         mUsername = "N/A"
-        mGroupIds = IdMap()
+        mGroups = RelationMap()
     }
 
-    constructor(id: String, email: String, username: String, groupIds: IdMap = IdMap()) {
+    constructor(id: String, email: String, username: String, groupIds: RelationMap = RelationMap()) {
         mId = id
         mEmail = email
         mUsername = username
-        mGroupIds = groupIds
+        mGroups = groupIds
     }
 
     @Exclude
@@ -36,8 +36,8 @@ class User : Serializable {
         return mUsername
     }
 
-    fun getGroups(): IdMap {
-        return mGroupIds
+    fun getGroups(): RelationMap {
+        return mGroups
     }
 
     @Exclude
@@ -53,7 +53,7 @@ class User : Serializable {
         mUsername = username
     }
 
-    fun setGroups(groupIds: HashMap<String, Any>) {
-        mGroupIds.putAll(groupIds)
+    fun setGroups(groups: HashMap<String, Any>) {
+        mGroups.putAll(groups)
     }
 }

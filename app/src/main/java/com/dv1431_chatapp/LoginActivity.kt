@@ -8,19 +8,19 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.dv1431_chatapp.database.DatabaseHandler
-import com.dv1431_chatapp.database.OnCompleteListener
-import com.dv1431_chatapp.database.OnDataChangeListener
+import com.dv1431_chatapp.database.FirebaseHandler
 import com.dv1431_chatapp.database.User
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.ValueEventListener
 
 class LoginActivity : AppCompatActivity() {
 
     // For logging
     private val TAG = LoginActivity::class.java.simpleName as String
+
+    private val mFirebaseHandler = FirebaseHandler.getInstance()
 
     private lateinit var mProgressBar: ProgressBar
 
@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
     private fun initiateGUIComponents(){
         loginActivity_login_btn.setOnClickListener {
             // Start the main app activity
-            login()
+            signIn()
         }
         loginActivity_register_btn.setOnClickListener {
             // Start a register Fragment
@@ -44,39 +44,35 @@ class LoginActivity : AppCompatActivity() {
         mProgressBar.isIndeterminate = true
     }
 
-    private fun login() {
+    private fun signIn() {
+        mProgressBar.visibility = View.VISIBLE
+
         val email = loginActivity_usrname_edtxt.text.toString()
         val password = loginActivity_pw_edtxt.text.toString()
 
-        val context = this
-
-        DatabaseHandler().login(email, password, object : OnCompleteListener {
-            override fun onStart() {
-                //TODO: Make this work!
-                mProgressBar.visibility = View.VISIBLE
-            }
-
-            override fun onSuccess(task: Task<AuthResult>) {
-                retrieveUserFromDatabase(task.result.user.uid)
-            }
-
-            override fun onFail(task: Task<AuthResult>) {
-                Toast.makeText(context, "Authentication failed.",
+        mFirebaseHandler.signIn(email, password, OnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "signInWithEmail:success")
+                val userId = mFirebaseHandler.getCurrentUserId()
+                if (userId != null) retrieveUserFromDatabase(userId)
+            } else {
+                Log.w(TAG, "signInWithEmail:failure", task.exception)
+                Toast.makeText(this, "Authentication failed.",
                         Toast.LENGTH_LONG).show()
             }
-
         })
     }
 
     private fun retrieveUserFromDatabase(userId: String) {
         val context = this
 
-        DatabaseHandler().retrieveDataOnce("users/"+userId, object : OnDataChangeListener {
-            override fun onStart() {
+        mFirebaseHandler.retrieveDataOnce("users/"+userId, object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                // TODO: Log and toast error
             }
 
-            override fun onChange(dataSnapshot: DataSnapshot) {
-                val user = dataSnapshot.getValue<User>(User::class.java)
+            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                val user = dataSnapshot?.getValue<User>(User::class.java)
                 if (user != null) {
                     user.setId(dataSnapshot.key)
                     val intent = Intent(context, MainActivity::class.java)
@@ -85,13 +81,10 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                 } else {
                     Log.w(TAG, "retrieveUserFromDatabase:failure")
+                    mProgressBar.visibility = View.GONE
                     Toast.makeText(context, "An error occurred. Please try again.",
                             Toast.LENGTH_LONG).show()
                 }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                //DO SOME THING WHEN GET DATA FAILED HERE
             }
         })
     }

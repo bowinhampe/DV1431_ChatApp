@@ -41,6 +41,7 @@ class GroupInteractionActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun initiateMapFragment() {
         val transaction = mFragmentManager.beginTransaction()
         val fragment = MapFragment()
@@ -49,6 +50,7 @@ class GroupInteractionActivity : AppCompatActivity() {
         transaction.addToBackStack(null)
         transaction.commit()
     }
+
     private fun initiateChatFragment(){
         //val fragment = ChatFragment.newInstance(mGroup)
         val bundle = Bundle()

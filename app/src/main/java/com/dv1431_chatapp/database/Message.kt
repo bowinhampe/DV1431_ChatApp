@@ -5,10 +5,16 @@ import com.google.firebase.database.Exclude
 /**
  * Created by dane on 11/29/17.
  */
-class Message() {
+class Message {
     private lateinit var mId: String
     private lateinit var mUser: String
     private lateinit var mMessage: String
+
+    constructor() {
+        mId = "N/A"
+        mUser = "N/A"
+        mMessage = "N/A"
+    }
 
     constructor(id: String, userId: String, message: String) : this() {
         mId = id
