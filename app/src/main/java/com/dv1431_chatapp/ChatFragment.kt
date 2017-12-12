@@ -32,7 +32,7 @@ import com.dv1431_chatapp.database.FirebaseHandler
 class ChatFragment:Fragment() {
 
     val GPS_TIME_INTERVAL: Long = 0
-    val GPS_MOVEMENT_INTERVAL: Float = 0.0f
+    val GPS_MOVEMENT_INTERVAL: Float = 10f
 
     private var mGroup: Group? = null
     private var mUser: User? = null
@@ -61,6 +61,7 @@ class ChatFragment:Fragment() {
         mLocationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 // Called when a new location is found by the network location provider.
+                println("LOCATIONS: ")
                 println(location.latitude)
                 println(location.longitude)
                 if(mOldLocation == null){
@@ -71,35 +72,40 @@ class ChatFragment:Fragment() {
                     mOldLocation = mCurrentLocation
                     mCurrentLocation = location
                 }
+
+                println("Get_Location_Stopped")
+                mLocationManager!!.removeUpdates(mLocationListener)
             }
 
-            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+                println("GPS_LOCATION: status changed ")
+            }
 
-            override fun onProviderEnabled(provider: String) {}
+            override fun onProviderEnabled(provider: String) {
+                println("GPS_LOCATION: Provider enabled ")
+            }
 
-            override fun onProviderDisabled(provider: String) {}
+            override fun onProviderDisabled(provider: String) {
+                println("GPS_LOCATION: Provider "+ provider + " disabled ")
+            }
         }
     }
 
 
     private fun getLocation(){
-        // TODO: THIS NEEDS TO WORK, somehow LOCATIONS doesnt update.
         // Register the listener with the Location Manager to receive location updates
         try {
-            mLocationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, mLocationListener)
+            if(mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                mLocationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, mLocationListener)
+            }
+            else if(mLocationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+                mLocationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, mLocationListener)
+            }
+            println("Get_Location_Registered")
         }
         catch (e: SecurityException){
             println("Get_Location_Exception:" + e.toString())
         }
-
-        /*if(mOldLocation == null || mCurrentLocation == null){
-            println("null af")
-        }
-        else {
-            if (mOldLocation!!.latitude != mCurrentLocation!!.latitude) {
-                locationManager.removeUpdates(locationList
-            }
-        }*/
 
     }
 
