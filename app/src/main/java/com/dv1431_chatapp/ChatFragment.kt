@@ -31,12 +31,16 @@ import android.location.LocationManager
 
 class ChatFragment:Fragment() {
 
+    val GPS_TIME_INTERVAL: Long = 0
+    val GPS_MOVEMENT_INTERVAL: Float = 0.0f
 
     private var mGroup: Group? = null
     private var mUser: User? = null
     private var mChatListView: ListView? = null
     private var mCurrentLocation: Location? = null
     private var mOldLocation: Location? = null
+    private var mLocationListener: LocationListener? = null
+    private var mLocationManager: LocationManager? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,27 +53,21 @@ class ChatFragment:Fragment() {
         mGroup = args.getSerializable("mGroup") as Group?
         mUser = args.getSerializable("mUser") as User?
 
-    }
-
-    private fun getLocation(){
-        // TODO: THIS NEEDS TO WORK, somehow LOCATIONS doesnt update.
-        // Acquire a reference to the system Location Manager
-        val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
         // Define a listener that responds to location updates
-        val locationListener = object : LocationListener {
+        mLocationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 // Called when a new location is found by the network location provider.
                 println(location.latitude)
                 println(location.longitude)
-                if(mOldLocation == null){
+
+                /*if(mOldLocation == null){
                     mCurrentLocation = location
                     mOldLocation = mCurrentLocation
                 }
                 else {
                     mOldLocation = mCurrentLocation
                     mCurrentLocation = location
-                }
+                }*/
             }
 
             override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
@@ -78,24 +76,30 @@ class ChatFragment:Fragment() {
 
             override fun onProviderDisabled(provider: String) {}
         }
+        // Acquire a reference to the system Location Manager
+        mLocationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-// Register the listener with the Location Manager to receive location updates
-        val GPS_TIME_INTERVAL: Long = 0
-        val GPS_MOVEMENT_INTERVAL: Float = 0.0f
+    }
+
+
+    private fun getLocation(){
+        // TODO: THIS NEEDS TO WORK, somehow LOCATIONS doesnt update.
+        // Register the listener with the Location Manager to receive location updates
         try {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, locationListener)
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, mLocationListener)
         }
         catch (e: SecurityException){
+            println("Get_Location_Exception:" + e.toString())
         }
 
-        if(mOldLocation == null || mCurrentLocation == null){
+        /*if(mOldLocation == null || mCurrentLocation == null){
             println("null af")
         }
         else {
             if (mOldLocation!!.latitude != mCurrentLocation!!.latitude) {
                 locationManager.removeUpdates(locationListener)
             }
-        }
+        }*/
 
     }
 
