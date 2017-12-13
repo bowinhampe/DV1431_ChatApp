@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.dv1431_chatapp.database.*
-import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_create_group.*
 import com.google.firebase.database.DataSnapshot
