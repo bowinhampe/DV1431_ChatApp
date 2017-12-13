@@ -17,16 +17,13 @@ import android.widget.ListView
 import com.dv1431_chatapp.R.layout.fragment_chat
 import com.firebase.ui.database.FirebaseListAdapter
 import com.google.firebase.database.FirebaseDatabase
-import com.dv1431_chatapp.database.Group
-import com.dv1431_chatapp.database.Message
-import com.dv1431_chatapp.database.User
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 import android.location.LocationManager
-import com.dv1431_chatapp.database.FirebaseHandler
+import com.dv1431_chatapp.database.*
 
 
 class ChatFragment:Fragment() {
@@ -124,6 +121,7 @@ class ChatFragment:Fragment() {
                     .setValue(message)
 
             getLocation()
+            
         }
 
     }

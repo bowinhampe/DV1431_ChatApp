@@ -22,7 +22,6 @@ import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsList
 import com.google.firebase.database.ChildEventListener
 
 class MainActivity : AppCompatActivity() {
-    //lateinit var mGroupList: ArrayList<String>
     private lateinit var mUser: User
     private var mGroups: ArrayList<Group> = ArrayList()
     var mSelectedGroupNumber = -1
@@ -111,15 +110,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    /*private fun retrieveGroup(groupId: String) {
-        FirebaseDatabase.getInstance().getReference("groupsTest").child(groupId).addListenerForSingleValueEvent(mRetrieveGroupListener)
-    }*/
-
     private fun initiateGroupList() {
         // TODO: limit listener to groups where the user has access to
+        // Add listener for every group the user is in
         for (grp in mUser.getGroups()) {
-            // Add listener for every group the user is in
-            //retrieveGroup(grp.key)
             mFirebaseHandler.retrieveDataOnce("groups/"+grp.key, mRetrieveGroupListener)
         }
     }
@@ -150,11 +144,9 @@ class MainActivity : AppCompatActivity() {
     fun startGroupInteractionActivity(groupPos: Int){
         // TODO: Use group "position" from listView click to create a chat window with the specified group.
         // EXAMPLE CODE
-        val selectedGroup = mGroups.get(groupPos)
-
         val intent = Intent(this, GroupInteractionActivity::class.java)
         intent.putExtra(User::class.java.simpleName, mUser)
-        intent.putExtra(Group::class.java.simpleName, selectedGroup)
+        intent.putExtra(Group::class.java.simpleName, mGroups[groupPos])
         startActivity(intent)
     }
 

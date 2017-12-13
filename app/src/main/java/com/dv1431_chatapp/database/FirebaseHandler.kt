@@ -36,11 +36,11 @@ class FirebaseHandler {
         mAuthentication.signOut()
     }
 
-    fun insertData(databaseReference: String, data: Any) {
+    fun insertData(databaseReference: String, data: Any?) {
         mDatabase.getReference(databaseReference).setValue(data)
     }
 
-    fun updateData(databaseReference: String, data: Map<String, Any>) {
+    fun updateData(databaseReference: String, data: Map<String, Any?>) {
         mDatabase.getReference(databaseReference).updateChildren(data)
     }
 
@@ -78,19 +78,22 @@ class FirebaseHandler {
         return mAuthentication.currentUser?.uid
     }
 
-    fun createGroup(group: ChatGroup) {
-        val ref = mFirebaseHandler.createRef("groups")
+    fun createGroup(group: Group) {
+        val ref = createRef("groups")
         ref.setValue(group)
+        group.setId(ref.key)
 
-        val key = ref.key
-
-        val groupId = RelationMap(key, true)
+        val groupId = RelationMap(group.getId(), "N/A")
         group.getMembers().forEach {
-            mFirebaseHandler.updateData("users/"+it.key+"/groups", groupId)
+            // Add group members under members reference
+            insertData("members/"+group.getId()+"/"+it.getId(), it)
+
+            // Add group to user
+            updateData("users/"+it.getId()+"/groups", groupId)
         }
     }
 
-    fun retrieveUserEmail(email: String , listener: ValueEventListener) {
+    fun addUserListenerByEmail(email: String, listener: ValueEventListener) {
         mFirebaseHandler.getReference("users")
                 .orderByChild("email")
                 .equalTo(email)

@@ -2,8 +2,12 @@ package com.dv1431_chatapp
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.dv1431_chatapp.database.FirebaseHandler
 import com.dv1431_chatapp.database.Group
 import com.dv1431_chatapp.database.User
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_group_interaction.*
 
 class GroupInteractionActivity : AppCompatActivity() {
@@ -14,12 +18,37 @@ class GroupInteractionActivity : AppCompatActivity() {
     private lateinit var mUser: User
     private lateinit var mGroup: Group
 
+    private val mFirebaseHandler = FirebaseHandler.getInstance()
+
+    /*private val mRetrieveGroupMembersListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            // Get group from user's group list
+            val group = dataSnapshot.getValue<Group>(Group::class.java)
+            if (group != null) {
+                group.setId(dataSnapshot.key)
+                mGroups.add(group)
+                // RE-paint the buttons
+                // TODO: should not repaint after every group add
+                initiateGUIComponents()
+            } else {
+                // TODO: Toast an error occurred
+            }
+
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            // TODO: database error
+        }
+    }*/
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_interaction)
 
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
         mGroup = intent.getSerializableExtra(Group::class.java.simpleName) as Group
+
+        //mFirebaseHandler.retrieveDataOnce("members/"+mGroup.getId(), mRetrieveGroupMembersListener)
 
         initializeGUIComponents()
         initiateChatFragment()
