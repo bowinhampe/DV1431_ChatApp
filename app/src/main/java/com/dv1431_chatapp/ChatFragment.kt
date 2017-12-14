@@ -112,11 +112,14 @@ class ChatFragment:Fragment() {
 
         initiateGUIComponents()
 
-        chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
-        chatFragment_input_chatBar.setSendClickListener {
+        //chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
+        //chatFragment_input_chatBar.setSendClickListener {
+        chatFragment_btn_sendMsg.setOnClickListener {
+            var msg = chatFragment_chatMsg_edtxt.text.toString()
+            println(msg)
             val message = Message()
             message.setUser(mUser!!.getUsername())
-            message.setMessage(chatFragment_input_chatBar.messageText)
+            message.setMessage(msg)
 
             mFirebaseHandler.createRef("messages/"+mGroup!!.getId())
                     .setValue(message)

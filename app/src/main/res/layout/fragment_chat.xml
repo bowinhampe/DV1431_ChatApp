@@ -14,18 +14,29 @@
         android:divider="@null"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
-        android:layout_above="@id/chatFragment_input_chatBar"
+        android:layout_above="@id/chatFragment_chatMsg_edtxt"
         android:id="@+id/chatFragment_msgWindow_listView">
 
     </ListView>
 
 
-    <com.cenkgun.chatbar.ChatBarView
-        android:id="@+id/chatFragment_input_chatBar"
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentLeft="true"
+        android:hint="Write message ..."
+        android:id="@+id/chatFragment_chatMsg_edtxt"
+        android:layout_toLeftOf="@id/chatFragment_btn_sendMsg"
+        android:layout_alignParentBottom="true"/>
+    <Button
+        android:layout_height="50dp"
+        android:layout_width="75dp"
+        android:layout_alignParentBottom="true"
+        android:text="Send"
+        android:layout_alignParentRight="true"
+        android:id="@+id/chatFragment_btn_sendMsg"
+        android:layout_marginBottom="5dp">
 
-    </com.cenkgun.chatbar.ChatBarView>
+    </Button>
 
 </RelativeLayout>

@@ -40,8 +40,16 @@ class CreateGroupActivity : AppCompatActivity() {
                         val user = it.getValue(User::class.java)
                         if (user != null) {
                             user.setId(it.key)
-                            mUserList.add(user.getEmail())
-                            mMembers.add(Member(user.getId(), "N/A"))
+                            val email = user.getEmail()
+                            if(!mUserList.contains(email)) {
+                                mUserList.add(email)
+                                mMembers.add(Member(user.getId(), "N/A"))
+                                mUserAdapter.notifyDataSetChanged()
+                            }
+                            else{
+                                Toast.makeText(context, "User already in list.",
+                                        Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 } else {
@@ -63,6 +71,7 @@ class CreateGroupActivity : AppCompatActivity() {
         mUserList = ArrayList()
         mUserAdapter = UserListAdapter(this, createGroupActivity_usersInGroup_listView.id, mUserList)
         createGroupActivity_usersInGroup_listView.adapter = mUserAdapter
+
         createGroupActivity_addUser_btn.setOnClickListener{
             addUser()
         }
