@@ -71,7 +71,7 @@ class ChatFragment:Fragment() {
                 }
 
                 // Updates user location in database. Had to be done here because I think this task is done asynchronously.
-                mLastMessage?.setLocation(LatLng(location.latitude, location.longitude))
+                mLastMessage?.setLocation(Location(location.latitude, location.longitude))
                 mFirebaseHandler.insertData("members/"+mGroup?.getId()+"/"+mUser?.getId()+"/lastMessage", mLastMessage)
 
                 println("Get_Location_Stopped")

@@ -13,6 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dv1431_chatapp.database.FirebaseHandler
+import com.dv1431_chatapp.database.Group
+import com.dv1431_chatapp.database.LastMessage
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
@@ -42,8 +44,18 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
 
     private val mFirebaseHandler = FirebaseHandler.getInstance()
 
+    private val mMessages = HashMap<String, LastMessage>()
+    private val bmpOpts = BitmapFactory.Options()
+
+    private lateinit var mBmp: Bitmap
+    private lateinit var mGroup: Group
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bmpOpts.inScaled = false
+        mBmp = BitmapFactory.decodeResource(resources, R.drawable.icon_marker, bmpOpts).copy(Bitmap.Config.ARGB_8888, true)
+
+        mGroup = arguments.getSerializable("mGroup") as Group
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -76,35 +88,44 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
         mMap.addMarker(markerOptions)
     }
 
-    private fun addIcon(bmp: Bitmap, userName: String, message: String, position: LatLng) {
+    private fun addMapMarker(message: LastMessage) {
         // Draws the first letter in the username on the bitmap
         val color = Paint()
         color.textSize = 36f
         color.color = Color.BLACK
 
-        val canvas = Canvas(bmp)
-        canvas.drawText(userName[0].toString(), 36f, 48f, color)
+        val canvas = Canvas(mBmp)
+        canvas.drawText(message.getUser()[0].toString(), 36f, 48f, color)
 
-        // Set the marker options
-        val markerOptions = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bmp))
-                .anchor(0.5f, 1f)
-                .position(position)
-                .title(userName)
-                .snippet(message)
-        mMap.addMarker(markerOptions)
+
+        val latitude = message.getLocation()?.getLatitude()
+        val longitude = message.getLocation()?.getLongitude()
+        if (latitude != null && longitude != null) {
+            val location = LatLng(latitude, longitude)
+            // Set the marker options
+            val markerOptions = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(mBmp))
+                    .anchor(0.5f, 1f)
+                    .position(location)
+                    .title(message.getUser())
+                    .snippet(message.getMessage())
+            mMap.addMarker(markerOptions)
+        }
     }
 
     override fun onMapReady(map: GoogleMap?) {
         if (map != null) {
             mMap = map
 
+            retrieveLastMessages()
+
+            //addMapMarker(LastMessage("asdasd", "User", "HEj", com.dv1431_chatapp.database.Location(0.0, 0.0)))
             // Load marker icon
-            val bmpOpts = BitmapFactory.Options()
+            /*val bmpOpts = BitmapFactory.Options()
             bmpOpts.inScaled = false
 
             val bmp = BitmapFactory.decodeResource(resources, R.drawable.icon_marker, bmpOpts).copy(Bitmap.Config.ARGB_8888, true)
-
-            addIcon(bmp, "User", "Message", LatLng(0.0, 0.0))
+            */
+            //addIcon(bmp, "User", "Message", LatLng(0.0, 0.0))
 
             // Using IconGenerator
             /*val iconGenerator = IconGenerator(context)
@@ -113,8 +134,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
         }
     }
 
-    /*private fun retrieveUserLocations() {
-        mFirebaseHandler.retrieveChildData("members/"+mGroup?.getId()+"/"+mUser?.getId()+"/location", object : ChildEventListener {
+    private fun retrieveLastMessages() {
+        mFirebaseHandler.retrieveChildData("members/"+mGroup.getId(), object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -123,18 +144,33 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun onChildChanged(dataSnapshot: DataSnapshot?, previousChildKey: String?) {
+                val data = dataSnapshot?.value
+                if (data !is String) {
+                    dataSnapshot?.children?.forEach {
+                        val message = it.getValue(LastMessage::class.java)
+                        if (message != null) {
+                            message.setId(dataSnapshot.key)
+                            addMapMarker(message)
+                            mMessages.put(message.getId(), message)
+                        }
+                    }
+                }
+
+
             }
 
             override fun onChildAdded(dataSnapshot: DataSnapshot?, previousChildKey: String?) {
-                val groupId = dataSnapshot?.key
-                if (groupId != null) {
-                    if (!mUser.getGroups().containsKey(groupId)) {
-                        mFirebaseHandler.retrieveDataOnce("groups/"+groupId, mGroupListener)
+                val data = dataSnapshot?.value
+                if (data !is String) {
+                    dataSnapshot?.children?.forEach {
+                        val newMessage = it.getValue(LastMessage::class.java)
+                        if (newMessage != null) {
+                            newMessage.setId(dataSnapshot.key)
+                            addMapMarker(newMessage)
+                            mMessages.put(newMessage.getId(), newMessage)
+                        }
                     }
-                } else {
-                    println("NULL")
                 }
             }
 
@@ -142,7 +178,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
                 // TODO: Remove group from list
             }
         })
-    }*/
+    }
 
     @Synchronized protected fun buildGoogleApiClient(){
         mClient = GoogleApiClient.Builder(context)

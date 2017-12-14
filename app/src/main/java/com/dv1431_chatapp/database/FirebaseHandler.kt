@@ -89,7 +89,10 @@ class FirebaseHandler {
         val groupId = RelationMap(group.getId(), "N/A")
         group.getMembers().forEach {
             // Add group members under members reference
-            insertData("members/"+group.getId()+"/"+it.getId(), it)
+            if (it.getLastMessage() != null)
+                insertData("members/"+group.getId()+"/"+it.getId(), it)
+            else
+                insertData("members/"+group.getId()+"/"+it.getId(), "N/A")
 
             // Add group to user
             updateData("users/"+it.getId()+"/groups", groupId)

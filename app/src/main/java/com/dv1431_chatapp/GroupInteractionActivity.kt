@@ -53,9 +53,14 @@ class GroupInteractionActivity : AppCompatActivity() {
     }
 
     private fun initiateMapFragment() {
-        val transaction = mFragmentManager.beginTransaction()
-        val fragment = MapFragment()
+        val bundle = Bundle()
+        bundle.putSerializable("mGroup", mGroup)
+        //bundle.putSerializable("mUser", mUser)
 
+        val fragment = MapFragment()
+        fragment.arguments = bundle
+
+        val transaction = mFragmentManager.beginTransaction()
         transaction.replace(R.id.groupInteraction_activity_mainFragment, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
@@ -85,10 +90,15 @@ class GroupInteractionActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot?) {
                 if (dataSnapshot?.value != null) {
                     dataSnapshot.children.forEach {
-                        val member = it.getValue(Member::class.java)
-                        if (member != null) {
-                            member.setId(it.key)
-                            mGroup.addMember(member)
+                        val data = it.value
+                        if (data !is String) {
+                            val member = it.getValue(Member::class.java)
+                            if (member != null) {
+                                member.setId(it.key)
+                                mGroup.addMember(member)
+                            }
+                        } else {
+                            mGroup.addMember(Member(it.key, null))
                         }
                     }
                 } else {

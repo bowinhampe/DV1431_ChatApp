@@ -25,7 +25,7 @@ class CreateGroupActivity : AppCompatActivity() {
         initiateGUIComponents()
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
         mMembers = ArrayList()
-        mMembers.add(Member(mUser.getId(), LastMessage()))
+        mMembers.add(Member(mUser.getId(), null))
 
         val context = this
         mUserListener = object: ValueEventListener {
@@ -41,7 +41,7 @@ class CreateGroupActivity : AppCompatActivity() {
                         if (user != null) {
                             user.setId(it.key)
                             mUserList.add(user.getEmail())
-                            mMembers.add(Member(user.getId(), LastMessage()))
+                            mMembers.add(Member(user.getId(), null))
                         }
                     }
                 } else {
