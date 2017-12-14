@@ -2,8 +2,10 @@ package com.dv1431_chatapp
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.dv1431_chatapp.database.FirebaseHandler
 import com.dv1431_chatapp.database.Group
+import com.dv1431_chatapp.database.Member
 import com.dv1431_chatapp.database.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,27 +22,6 @@ class GroupInteractionActivity : AppCompatActivity() {
 
     private val mFirebaseHandler = FirebaseHandler.getInstance()
 
-    /*private val mRetrieveGroupMembersListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            // Get group from user's group list
-            val group = dataSnapshot.getValue<Group>(Group::class.java)
-            if (group != null) {
-                group.setId(dataSnapshot.key)
-                mGroups.add(group)
-                // RE-paint the buttons
-                // TODO: should not repaint after every group add
-                initiateGUIComponents()
-            } else {
-                // TODO: Toast an error occurred
-            }
-
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            // TODO: database error
-        }
-    }*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_interaction)
@@ -48,7 +29,7 @@ class GroupInteractionActivity : AppCompatActivity() {
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
         mGroup = intent.getSerializableExtra(Group::class.java.simpleName) as Group
 
-        //mFirebaseHandler.retrieveDataOnce("members/"+mGroup.getId(), mRetrieveGroupMembersListener)
+        retrieveGroupMembers()
 
         initializeGUIComponents()
         initiateChatFragment()
@@ -91,5 +72,31 @@ class GroupInteractionActivity : AppCompatActivity() {
         transaction.replace(R.id.groupInteraction_activity_mainFragment, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun retrieveGroupMembers() {
+        val context = this
+        mFirebaseHandler.retrieveDataOnce("members/"+mGroup.getId(), object: ValueEventListener {
+
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                if (dataSnapshot?.value != null) {
+                    dataSnapshot.children.forEach {
+                        val member = it.getValue(Member::class.java)
+                        if (member != null) {
+                            member.setId(it.key)
+                            println(member.getLocation())
+                            mGroup.addMember(member)
+                        }
+                    }
+                } else {
+                    Toast.makeText(context, "User not found.",
+                            Toast.LENGTH_LONG).show()
+                }
+            }
+        })
     }
 }

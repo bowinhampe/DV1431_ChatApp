@@ -15,7 +15,7 @@ class CreateGroupActivity : AppCompatActivity() {
     private lateinit var mMembers: ArrayList<Member>
     private lateinit var mUser: User
 
-    private lateinit var mRetrieveUserListener: ValueEventListener
+    private lateinit var mUserListener: ValueEventListener
 
     private val mFirebaseHandler = FirebaseHandler.getInstance()
 
@@ -28,7 +28,7 @@ class CreateGroupActivity : AppCompatActivity() {
         mMembers.add(Member(mUser.getId(), "N/A"))
 
         val context = this
-        mRetrieveUserListener = object: ValueEventListener {
+        mUserListener = object: ValueEventListener {
 
             override fun onCancelled(p0: DatabaseError?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -54,7 +54,7 @@ class CreateGroupActivity : AppCompatActivity() {
 
     private fun addUser() {
         val email = createGroupActivity_userEmail_edtxt.text.toString()
-        mFirebaseHandler.addUserListenerByEmail(email, mRetrieveUserListener)
+        mFirebaseHandler.addUserListenerByEmail(email, mUserListener)
     }
 
     private fun initiateGUIComponents(){

@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private val mFirebaseHandler = FirebaseHandler.getInstance()
 
-    private val mRetrieveGroupListener = object : ValueEventListener {
+    private val mGroupListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             // Get group from user's group list
             val group = dataSnapshot.getValue<Group>(Group::class.java)
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 val groupId = dataSnapshot?.key
                 if (groupId != null) {
                     if (!mUser.getGroups().containsKey(groupId)) {
-                        mFirebaseHandler.retrieveDataOnce("groups/"+groupId, mRetrieveGroupListener)
+                        mFirebaseHandler.retrieveDataOnce("groups/"+groupId, mGroupListener)
                     }
                 } else {
                     println("NULL")
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         // TODO: limit listener to groups where the user has access to
         // Add listener for every group the user is in
         for (grp in mUser.getGroups()) {
-            mFirebaseHandler.retrieveDataOnce("groups/"+grp.key, mRetrieveGroupListener)
+            mFirebaseHandler.retrieveDataOnce("groups/"+grp.key, mGroupListener)
         }
     }
 

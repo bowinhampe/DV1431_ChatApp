@@ -37,7 +37,10 @@ class FirebaseHandler {
     }
 
     fun insertData(databaseReference: String, data: Any?) {
-        mDatabase.getReference(databaseReference).setValue(data)
+        if (data != null)
+            mDatabase.getReference(databaseReference).setValue(data)
+        else
+            mDatabase.getReference(databaseReference).setValue("N/A")
     }
 
     fun updateData(databaseReference: String, data: Map<String, Any?>) {

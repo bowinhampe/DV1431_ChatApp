@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 import android.location.LocationManager
 import com.dv1431_chatapp.database.*
+import com.google.android.gms.maps.model.LatLng
 
 
 class ChatFragment:Fragment() {
@@ -58,9 +59,6 @@ class ChatFragment:Fragment() {
         mLocationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 // Called when a new location is found by the network location provider.
-                println("LOCATIONS: ")
-                println(location.latitude)
-                println(location.longitude)
                 if(mOldLocation == null){
                     mCurrentLocation = location
                     mOldLocation = mCurrentLocation
@@ -69,6 +67,9 @@ class ChatFragment:Fragment() {
                     mOldLocation = mCurrentLocation
                     mCurrentLocation = location
                 }
+
+                // Updates user location in database. Had to be done here because I think this task is done asynchronously.
+                mFirebaseHandler.insertData("members/"+mGroup?.getId()+"/"+mUser?.getId()+"/location", LatLng(location.latitude, location.longitude))
 
                 println("Get_Location_Stopped")
                 mLocationManager!!.removeUpdates(mLocationListener)
@@ -121,7 +122,6 @@ class ChatFragment:Fragment() {
                     .setValue(message)
 
             getLocation()
-            
         }
 
     }
