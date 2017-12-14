@@ -25,7 +25,7 @@ class CreateGroupActivity : AppCompatActivity() {
         initiateGUIComponents()
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
         mMembers = ArrayList()
-        mMembers.add(Member(mUser.getId(), "N/A"))
+        mMembers.add(Member(mUser.getId(), null))
 
         val context = this
         mUserListener = object: ValueEventListener {
@@ -43,8 +43,9 @@ class CreateGroupActivity : AppCompatActivity() {
                             val email = user.getEmail()
                             if(!mUserList.contains(email)) {
                                 mUserList.add(email)
-                                mMembers.add(Member(user.getId(), "N/A"))
+                                mMembers.add(Member(user.getId(), null))
                                 mUserAdapter.notifyDataSetChanged()
+                                createGroupActivity_userEmail_edtxt.text.clear()
                             }
                             else{
                                 Toast.makeText(context, "User already in list.",

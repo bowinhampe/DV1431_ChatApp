@@ -30,7 +30,7 @@ import com.google.android.gms.maps.model.LatLng
 class ChatFragment:Fragment() {
 
     val GPS_TIME_INTERVAL: Long = 0
-    val GPS_MOVEMENT_INTERVAL: Float = 10f
+    val GPS_MOVEMENT_INTERVAL: Float = 0.0f
 
     private var mGroup: Group? = null
     private var mUser: User? = null
@@ -39,6 +39,8 @@ class ChatFragment:Fragment() {
     private var mOldLocation: Location? = null
     private var mLocationListener: LocationListener? = null
     private var mLocationManager: LocationManager? = null
+
+    private var mLastMessage: LastMessage? = null
 
     private val mFirebaseHandler = FirebaseHandler.getInstance()
 
@@ -58,6 +60,7 @@ class ChatFragment:Fragment() {
         // Define a listener that responds to location updates
         mLocationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
+                println("OnLocationChanged")
                 // Called when a new location is found by the network location provider.
                 if(mOldLocation == null){
                     mCurrentLocation = location
@@ -69,7 +72,8 @@ class ChatFragment:Fragment() {
                 }
 
                 // Updates user location in database. Had to be done here because I think this task is done asynchronously.
-                mFirebaseHandler.insertData("members/"+mGroup?.getId()+"/"+mUser?.getId()+"/location", LatLng(location.latitude, location.longitude))
+                mLastMessage?.setLocation(Location(location.latitude, location.longitude))
+                mFirebaseHandler.insertData("members/"+mGroup?.getId()+"/"+mUser?.getId()+"/lastMessage", mLastMessage)
 
                 println("Get_Location_Stopped")
                 mLocationManager!!.removeUpdates(mLocationListener)
@@ -95,8 +99,10 @@ class ChatFragment:Fragment() {
         try {
             if(mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 mLocationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, mLocationListener)
+                println("Get_Location_GPS_activated")
             }
             else if(mLocationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+                println("Get_Location_NETWORK_activated")
                 mLocationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GPS_TIME_INTERVAL, GPS_MOVEMENT_INTERVAL, mLocationListener)
             }
             println("Get_Location_Registered")
@@ -124,7 +130,10 @@ class ChatFragment:Fragment() {
             mFirebaseHandler.createRef("messages/"+mGroup!!.getId())
                     .setValue(message)
 
+            mLastMessage = LastMessage(message)
+
             getLocation()
+            chatFragment_chatMsg_edtxt.text.clear()
         }
 
     }

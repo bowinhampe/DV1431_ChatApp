@@ -4,16 +4,16 @@ import com.google.firebase.database.Exclude
 
 class Member {
     private var mId: String
-    private var mLocation: Any
+    private var mLastMessage: LastMessage?
 
     constructor() {
         mId = "N/A"
-        mLocation = "N/A"
+        mLastMessage = LastMessage()
     }
 
-    constructor(id: String, location: Any) {
+    constructor(id: String, lastMessage: LastMessage?) {
         mId = id
-        mLocation = location
+        mLastMessage = lastMessage
     }
 
     @Exclude
@@ -26,11 +26,12 @@ class Member {
         mId = id
     }
 
-    fun getLocation() : Any {
-        return mLocation
+    fun getLastMessage() : LastMessage? {
+        return mLastMessage
     }
 
-    fun setLocation(location: Any) {
-        mLocation = location
+    fun setLastMessage(lastMessage: LastMessage?) {
+        mLastMessage = lastMessage
     }
+
 }
