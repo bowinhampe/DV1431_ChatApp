@@ -5,10 +5,10 @@ import com.google.firebase.database.Exclude
 /**
  * Created by dane on 11/29/17.
  */
-class Message {
-    private lateinit var mId: String
-    private lateinit var mUser: String
-    private lateinit var mMessage: String
+open class Message {
+    private var mId: String
+    private var mUser: String
+    private var mMessage: String
 
     constructor() {
         mId = "N/A"
@@ -16,9 +16,9 @@ class Message {
         mMessage = "N/A"
     }
 
-    constructor(id: String, userId: String, message: String) : this() {
+    constructor(id: String, user: String, message: String) {
         mId = id
-        mUser = userId
+        mUser = user
         mMessage = message
     }
 

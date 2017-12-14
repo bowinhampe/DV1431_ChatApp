@@ -40,6 +40,8 @@ class ChatFragment:Fragment() {
     private var mLocationListener: LocationListener? = null
     private var mLocationManager: LocationManager? = null
 
+    private var mLastMessage: LastMessage? = null
+
     private val mFirebaseHandler = FirebaseHandler.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +71,8 @@ class ChatFragment:Fragment() {
                 }
 
                 // Updates user location in database. Had to be done here because I think this task is done asynchronously.
-                mFirebaseHandler.insertData("members/"+mGroup?.getId()+"/"+mUser?.getId()+"/location", LatLng(location.latitude, location.longitude))
+                mLastMessage?.setLocation(LatLng(location.latitude, location.longitude))
+                mFirebaseHandler.insertData("members/"+mGroup?.getId()+"/"+mUser?.getId()+"/lastMessage", mLastMessage)
 
                 println("Get_Location_Stopped")
                 mLocationManager!!.removeUpdates(mLocationListener)
@@ -120,6 +123,8 @@ class ChatFragment:Fragment() {
 
             mFirebaseHandler.createRef("messages/"+mGroup!!.getId())
                     .setValue(message)
+
+            mLastMessage = LastMessage(message)
 
             getLocation()
         }

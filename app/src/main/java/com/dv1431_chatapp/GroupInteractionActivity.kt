@@ -88,7 +88,6 @@ class GroupInteractionActivity : AppCompatActivity() {
                         val member = it.getValue(Member::class.java)
                         if (member != null) {
                             member.setId(it.key)
-                            println(member.getLocation())
                             mGroup.addMember(member)
                         }
                     }

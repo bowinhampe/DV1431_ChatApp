@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dv1431_chatapp.database.FirebaseHandler
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
@@ -22,6 +23,9 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_map.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.maps.android.ui.IconGenerator
 
 
@@ -35,6 +39,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
     private var mLastLocation: Location? = null
     private var mCurrentLocationMarker: Marker? = null
     private val mFragmentManager = SupportMapFragment()
+
+    private val mFirebaseHandler = FirebaseHandler.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +112,37 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
             addIcon(iconGenerator, "User", "Message", LatLng(0.0, 0.0))*/
         }
     }
+
+    /*private fun retrieveUserLocations() {
+        mFirebaseHandler.retrieveChildData("members/"+mGroup?.getId()+"/"+mUser?.getId()+"/location", object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildAdded(dataSnapshot: DataSnapshot?, previousChildKey: String?) {
+                val groupId = dataSnapshot?.key
+                if (groupId != null) {
+                    if (!mUser.getGroups().containsKey(groupId)) {
+                        mFirebaseHandler.retrieveDataOnce("groups/"+groupId, mGroupListener)
+                    }
+                } else {
+                    println("NULL")
+                }
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot?) {
+                // TODO: Remove group from list
+            }
+        })
+    }*/
 
     @Synchronized protected fun buildGoogleApiClient(){
         mClient = GoogleApiClient.Builder(context)
