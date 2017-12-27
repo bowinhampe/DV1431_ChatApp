@@ -29,7 +29,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.maps.android.ui.IconGenerator
-
+import java.util.*
 
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -47,13 +47,13 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
     private val mMessages = HashMap<String, LastMessage>()
     private val bmpOpts = BitmapFactory.Options()
 
-    private lateinit var mBmp: Bitmap
+    private lateinit var mBmpMarker: Bitmap
     private lateinit var mGroup: Group
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bmpOpts.inScaled = false
-        mBmp = BitmapFactory.decodeResource(resources, R.drawable.icon_marker, bmpOpts).copy(Bitmap.Config.ARGB_8888, true)
+        mBmpMarker = BitmapFactory.decodeResource(resources, R.drawable.icon_marker, bmpOpts).copy(Bitmap.Config.ARGB_8888, true)
 
         mGroup = arguments.getSerializable("mGroup") as Group
     }
@@ -94,16 +94,16 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
         color.textSize = 36f
         color.color = Color.BLACK
 
-        val canvas = Canvas(mBmp)
+        val tempBmp = mBmpMarker.copy(mBmpMarker.config, true)
+        val canvas = Canvas(tempBmp)
         canvas.drawText(message.getUser()[0].toString(), 36f, 48f, color)
-
 
         val latitude = message.getLocation()?.getLatitude()
         val longitude = message.getLocation()?.getLongitude()
         if (latitude != null && longitude != null) {
             val location = LatLng(latitude, longitude)
             // Set the marker options
-            val markerOptions = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(mBmp))
+            val markerOptions = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(tempBmp))
                     .anchor(0.5f, 1f)
                     .position(location)
                     .title(message.getUser())
@@ -116,21 +116,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
         if (map != null) {
             mMap = map
 
+            println("onMapeReady")
+
             retrieveLastMessages()
-
-            //addMapMarker(LastMessage("asdasd", "User", "HEj", com.dv1431_chatapp.database.Location(0.0, 0.0)))
-            // Load marker icon
-            /*val bmpOpts = BitmapFactory.Options()
-            bmpOpts.inScaled = false
-
-            val bmp = BitmapFactory.decodeResource(resources, R.drawable.icon_marker, bmpOpts).copy(Bitmap.Config.ARGB_8888, true)
-            */
-            //addIcon(bmp, "User", "Message", LatLng(0.0, 0.0))
-
-            // Using IconGenerator
-            /*val iconGenerator = IconGenerator(context)
-            iconGenerator.setBackground(ContextCompat.getDrawable(context, R.drawable.icon_marker))
-            addIcon(iconGenerator, "User", "Message", LatLng(0.0, 0.0))*/
         }
     }
 
@@ -156,8 +144,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
                         }
                     }
                 }
-
-
             }
 
             override fun onChildAdded(dataSnapshot: DataSnapshot?, previousChildKey: String?) {
