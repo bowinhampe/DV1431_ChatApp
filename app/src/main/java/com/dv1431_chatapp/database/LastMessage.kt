@@ -1,12 +1,14 @@
 package com.dv1431_chatapp.database
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.database.Exclude
 
 /**
  * Created by dane on 12/14/17.
  */
 
 class LastMessage : Message {
+    private lateinit var mUserId: String
     private var mLocation: Location? = null
 
     constructor() : super() {
@@ -22,6 +24,16 @@ class LastMessage : Message {
         setUser(message.getUser())
         setMessage(message.getMessage())
         mLocation = null
+    }
+
+    @Exclude
+    fun getUserId() : String {
+        return mUserId
+    }
+
+    @Exclude
+    fun setUserId(userId: String) {
+        mUserId = userId
     }
 
     fun getLocation() : Location? {

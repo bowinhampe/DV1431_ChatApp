@@ -30,6 +30,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.maps.android.ui.IconGenerator
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -49,6 +50,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
 
     private lateinit var mBmpMarker: Bitmap
     private lateinit var mGroup: Group
+    private val mMarkers = HashMap<String, Marker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +110,14 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
                     .position(location)
                     .title(message.getUser())
                     .snippet(message.getMessage())
-            mMap.addMarker(markerOptions)
+
+            //Remove old marker
+            var marker = mMarkers.get(message.getUserId())
+            if (marker != null)
+                marker.remove()
+
+            marker = mMap.addMarker(markerOptions)
+            mMarkers.put(message.getUserId(), marker)
         }
     }
 
@@ -138,7 +147,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
                     dataSnapshot?.children?.forEach {
                         val message = it.getValue(LastMessage::class.java)
                         if (message != null) {
-                            message.setId(dataSnapshot.key)
+                            message.setUserId(dataSnapshot.key)
                             addMapMarker(message)
                             mMessages.put(message.getId(), message)
                         }
@@ -152,7 +161,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
                     dataSnapshot?.children?.forEach {
                         val newMessage = it.getValue(LastMessage::class.java)
                         if (newMessage != null) {
-                            newMessage.setId(dataSnapshot.key)
+                            newMessage.setUserId(dataSnapshot.key)
                             addMapMarker(newMessage)
                             mMessages.put(newMessage.getId(), newMessage)
                         }
