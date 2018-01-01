@@ -43,6 +43,7 @@
              android:layout_height="50dp"
              android:hint="@string/edtxt_pw"
              android:id="@+id/loginActivity_pw_edtxt"
+             android:inputType="textPassword"
              android:text="pwd123"
              android:layout_centerInParent="true"/>
 
