@@ -39,13 +39,14 @@ class RegisterActivity : AppCompatActivity() {
         // TODO: Validate credentials?
 
         val context = this
+        try{
         mFirebaseHandler.register(email, password, OnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "createUserWithEmail:success")
                 val userId = mFirebaseHandler.getCurrentUserId()
                 if (userId != null) {
                     val user = User(userId, email, username)
-                    mFirebaseHandler.insertData("users/"+userId, user)
+                    mFirebaseHandler.insertData("users/" + userId, user)
                     val intent = Intent(context, MainActivity::class.java)
                     intent.putExtra(User::class.java.simpleName, user)
                     startActivity(intent)
@@ -56,6 +57,10 @@ class RegisterActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG).show()
             }
         })
+        }
+        catch(e: Exception){
+            Toast.makeText(context, "Register failed", Toast.LENGTH_LONG).show()
+        }
     }
 
 }

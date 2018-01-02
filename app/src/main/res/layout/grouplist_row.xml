@@ -6,9 +6,25 @@
     android:background="@color/groupBackgroundGrey">
 
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/label_group"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:textAlignment="center"
         android:textSize="20sp"
+        android:layout_marginLeft="10dp"
         android:textColor="@color/textBlack"/>
+
+    <Button
+        android:id="@+id/btn_leave_grp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/icondelete"
+        android:text="-">
+
+
+    </Button>
 </RelativeLayout>

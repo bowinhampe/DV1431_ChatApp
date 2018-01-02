@@ -13,7 +13,7 @@
         <Button
             android:layout_width="50dp"
             android:layout_height="25dp"
-            android:id="@+id/createGroupActivity_back_btn"
+            android:id="@+id/activityMain_back_btn"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/back">
