@@ -1,8 +1,9 @@
 package com.dv1431_chatapp.database
 
 import com.google.firebase.database.Exclude
+import java.io.Serializable
 
-class Member {
+class Member : Serializable{
     private var mId: String
     private var mLastMessage: LastMessage?
 
