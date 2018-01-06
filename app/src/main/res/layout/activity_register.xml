@@ -44,7 +44,7 @@
         android:layout_centerInParent="true"
         android:id="@+id/registerActivity_register_btn"
         android:layout_below="@id/registerActivity_pw_edtxt"
-        android:text="@string/btn_register">
+        android:text="@string/btn_signUp">
     </Button>
 
 

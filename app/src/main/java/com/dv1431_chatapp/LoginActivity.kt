@@ -47,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
     private fun signIn() {
         mProgressBar.visibility = View.VISIBLE
 
+        try{
         val email = loginActivity_usrname_edtxt.text.toString()
         val password = loginActivity_pw_edtxt.text.toString()
 
@@ -61,6 +62,10 @@ class LoginActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG).show()
             }
         })
+        }
+        catch(e: Exception){
+                Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show()
+            }
     }
 
     private fun retrieveUserFromDatabase(userId: String) {
