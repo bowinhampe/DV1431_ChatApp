@@ -136,11 +136,21 @@ class MainActivity : AppCompatActivity() {
     private fun leaveGroup(groupName: String){
         println(groupName)
         var groupId = ""
-        mGroups.forEach {
+        var pos = 0
+        for(i in mGroups.indices){
+            if(groupName.equals(mGroups[i].getName())) {
+                groupId = mGroups[i].getId()
+                pos = i
+            }
+        }
+
+        mGroups.removeAt(pos)
+        /*mGroups.forEach {
             if(groupName.equals(it.getName())) {
                 groupId = it.getId()
             }
-        }
+        }*/
+
 
         var fireBaseDbRefRemoval = mFirebaseHandler.getReference("users/"+mUser.getId()+"/groups/"+groupId)
         fireBaseDbRefRemoval.removeValue()

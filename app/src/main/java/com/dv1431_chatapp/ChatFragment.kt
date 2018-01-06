@@ -11,18 +11,15 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import com.dv1431_chatapp.R.layout.fragment_chat
 import com.firebase.ui.database.FirebaseListAdapter
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_chat.*
-import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 import android.location.LocationManager
+import android.widget.*
 import com.dv1431_chatapp.database.*
 import com.google.android.gms.maps.model.LatLng
 
@@ -47,10 +44,13 @@ class ChatFragment:Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        println("ChatFragment_OnCreate")
         if (arguments == null) {
             println("arg null")
         }
         val args = arguments
+        // TODO: Här är det inte bra, måste få "::name::java::simplename eller vad det heter.
+        // XX::class.java.simpleName
         mGroup = args.getSerializable("mGroup") as Group?
         mUser = args.getSerializable("mUser") as User?
 
@@ -93,6 +93,10 @@ class ChatFragment:Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        println("ChatFragment_OnPause")
+    }
 
     private fun getLocation(){
         // Register the listener with the Location Manager to receive location updates
@@ -115,25 +119,29 @@ class ChatFragment:Fragment() {
 
     override fun onStart() {
         super.onStart()
-
+        println("ChatFragment_OnStart")
         initiateGUIComponents()
 
-        //chatFragment_input_chatBar.setMessageBoxHint("Enter message...")
-        //chatFragment_input_chatBar.setSendClickListener {
         chatFragment_btn_sendMsg.setOnClickListener {
             var msg = chatFragment_chatMsg_edtxt.text.toString()
-            println(msg)
-            val message = Message()
-            message.setUser(mUser!!.getUsername())
-            message.setMessage(msg)
+            if(msg.isEmpty()){
+                Toast.makeText(context, "Message field cannot be empty.",
+                        Toast.LENGTH_LONG).show()
+            }
+            else {
+                println(msg)
+                val message = Message()
+                message.setUser(mUser!!.getUsername())
+                message.setMessage(msg)
 
-            mFirebaseHandler.createRef("messages/"+mGroup!!.getId())
-                    .setValue(message)
+                mFirebaseHandler.createRef("messages/" + mGroup!!.getId())
+                        .setValue(message)
 
-            mLastMessage = LastMessage(message)
+                mLastMessage = LastMessage(message)
 
-            getLocation()
-            chatFragment_chatMsg_edtxt.text.clear()
+                getLocation()
+                chatFragment_chatMsg_edtxt.text.clear()
+            }
         }
 
     }

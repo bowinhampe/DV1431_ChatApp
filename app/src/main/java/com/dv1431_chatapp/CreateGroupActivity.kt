@@ -26,6 +26,7 @@ class CreateGroupActivity : AppCompatActivity() {
         mUser = intent.getSerializableExtra(User::class.java.simpleName) as User
         mMembers = ArrayList()
         mMembers.add(Member(mUser.getId(), null))
+        mUserList.add(mUser.getEmail())
 
         val context = this
         mUserListener = object: ValueEventListener {
@@ -85,13 +86,20 @@ class CreateGroupActivity : AppCompatActivity() {
     }
 
     private fun createGroup() {
-        val group = Group()
-        group.setName(createGroupActivity_grpName_edtxt.text.toString())
-        group.setMembers(mMembers)
+        val groupName = createGroupActivity_grpName_edtxt.text.toString()
+        if(groupName.isEmpty()){
+            Toast.makeText(this, "Group name is empty.",
+                    Toast.LENGTH_LONG).show()
+        }
+        else {
+            val group = Group()
+            group.setName(groupName)
+            group.setMembers(mMembers)
 
-        mFirebaseHandler.createGroup(group)
+            mFirebaseHandler.createGroup(group)
 
-        finish()
+            finish()
+        }
     }
 
 }

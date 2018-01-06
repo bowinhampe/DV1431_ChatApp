@@ -4,9 +4,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.Exclude
 import java.io.Serializable
 
-/**
- * Created by philzon on 11/29/17.
- */
 
 open class Group : Serializable {
     private var mId: String
@@ -62,4 +59,5 @@ open class Group : Serializable {
     fun setMembers(members: ArrayList<Member>) {
         mMembers = members
     }
+
 }
