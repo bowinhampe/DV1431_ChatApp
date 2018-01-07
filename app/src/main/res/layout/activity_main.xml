@@ -27,6 +27,8 @@
             android:layout_centerInParent="true"
             android:layout_alignParentTop="true"
             android:id="@+id/mainActivity_create_grp_btn"
+            android:background="@drawable/plate"
+            android:textColor="@color/textWhite"
             android:layout_marginTop="25dp">
         </Button>
 

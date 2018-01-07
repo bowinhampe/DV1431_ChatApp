@@ -66,6 +66,8 @@
         android:layout_height="50dp"
         android:layout_width="250dp"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/plate"
+        android:textColor="@color/textWhite"
         android:id="@+id/createGroupActivity_createGrp_btn"
         android:layout_centerInParent="true"
         android:layout_marginBottom="10dp"

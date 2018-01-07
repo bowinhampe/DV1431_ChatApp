@@ -1,11 +1,12 @@
 package com.dv1431_chatapp.database
 
 import com.google.android.gms.maps.model.LatLng
+import java.io.Serializable
 
 /**
  * Created by dane on 12/14/17.
  */
-class Location {
+class Location : Serializable {
     private var mLatitude: Double?
     private var mLongitude: Double?
 

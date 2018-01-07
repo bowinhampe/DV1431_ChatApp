@@ -35,7 +35,6 @@
              android:id="@+id/loginActivity_usrname_edtxt"
              android:layout_above="@id/loginActivity_pw_edtxt"
              android:hint="@string/edtxt_email"
-             android:text="test@chat.app"
              android:layout_centerInParent="true"/>
 
          <EditText
@@ -44,7 +43,6 @@
              android:hint="@string/edtxt_pw"
              android:id="@+id/loginActivity_pw_edtxt"
              android:inputType="textPassword"
-             android:text="pwd123"
              android:layout_centerInParent="true"/>
 
          <Button
@@ -53,6 +51,9 @@
              android:layout_centerInParent="true"
              android:layout_below="@id/loginActivity_pw_edtxt"
              android:id="@+id/loginActivity_login_btn"
+             android:background="@drawable/plate"
+             android:textColor="@color/textWhite"
+             android:layout_marginTop="5dp"
              android:text="@string/btn_login">
          </Button>
 
@@ -62,6 +63,9 @@
              android:layout_below="@id/loginActivity_login_btn"
              android:layout_centerInParent="true"
              android:id="@+id/loginActivity_register_btn"
+             android:background="@drawable/plate"
+             android:layout_marginTop="5dp"
+             android:textColor="@color/textWhite"
              android:text="@string/btn_register">
          </Button>
 

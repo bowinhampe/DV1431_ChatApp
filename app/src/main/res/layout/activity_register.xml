@@ -44,6 +44,8 @@
         android:layout_centerInParent="true"
         android:id="@+id/registerActivity_register_btn"
         android:layout_below="@id/registerActivity_pw_edtxt"
+        android:background="@drawable/plate"
+        android:textColor="@color/textWhite"
         android:text="@string/btn_signUp">
     </Button>
 
