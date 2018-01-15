@@ -36,7 +36,7 @@
         android:layout_alignLeft="@id/createGroupActivity_grpName_edtxt"
         android:layout_below="@id/createGroupActivity_grpName_edtxt"
         android:layout_marginTop="10dp"
-        android:hint="@string/edtxt_email"
+        android:hint="@string/edtxt_usremail"
         android:id="@+id/createGroupActivity_userEmail_edtxt">
 
     </EditText>
@@ -71,7 +71,7 @@
         android:id="@+id/createGroupActivity_createGrp_btn"
         android:layout_centerInParent="true"
         android:layout_marginBottom="10dp"
-        android:text="@string/btn_create_grp">
+        android:text="@string/btn_create_grp_done">
 
     </Button>
 

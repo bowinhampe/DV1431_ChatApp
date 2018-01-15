@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
         mProgressBar.visibility = View.VISIBLE
 
         try{
-        val email = loginActivity_usrname_edtxt.text.toString()
+        val email = loginActivity_usrname_edtxt.text.toString().trim()
         val password = loginActivity_pw_edtxt.text.toString()
 
         mFirebaseHandler.signIn(email, password, OnCompleteListener { task ->

@@ -63,7 +63,7 @@ class CreateGroupActivity : AppCompatActivity() {
     }
 
     private fun addUser() {
-        val email = createGroupActivity_userEmail_edtxt.text.toString()
+        val email = createGroupActivity_userEmail_edtxt.text.toString().trim()
         mFirebaseHandler.addUserListenerByEmail(email, mUserListener)
     }
 

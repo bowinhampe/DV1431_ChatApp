@@ -49,6 +49,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
     private lateinit var mBmpMarker: Bitmap
     private lateinit var mGroup: Group
     private val mMarkers = HashMap<String, Marker>()
+    private val currentUserId = mFirebaseHandler.getCurrentUserId()
+    private var currentUserPositionFound = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,6 +119,12 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
 
             marker = mMap.addMarker(markerOptions)
             mMarkers.put(message.getUserId(), marker)
+
+            if (!currentUserPositionFound)
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 5f))
+
+            if (message.getUserId() == currentUserId)
+                currentUserPositionFound = true
         }
     }
 
@@ -129,14 +137,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
             retrieveLastMessages()
 
             // TODO: Lägg till user location på rad 136 "MyLocation"
-            var userId = mFirebaseHandler.getCurrentUserId()
-            val myMarker = mMarkers[userId]
-            if(myMarker != null) {
-                val myLocation = myMarker!!.position
-                this.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 10f))
-                println(myLocation.latitude)
-                println(myLocation.longitude)
-            }
         }
     }
 

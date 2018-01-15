@@ -32,7 +32,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun register() {
-        val email = registerActivity_email_edtxt.text.toString()
+        val email = registerActivity_email_edtxt.text.toString().trim()
         val password = registerActivity_pw_edtxt.text.toString()
         val username = registerActivity_usrname_edtxt.text.toString()
 
