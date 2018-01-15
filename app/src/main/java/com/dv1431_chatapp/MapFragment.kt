@@ -39,8 +39,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
     private lateinit var mMap: GoogleMap
     private var mClient: GoogleApiClient? = null
     private var mLocationRequest: LocationRequest? = null
-    private var mLastLocation: Location? = null
-    private var mCurrentLocationMarker: Marker? = null
     private val mFragmentManager = SupportMapFragment()
 
     private val mFirebaseHandler = FirebaseHandler.getInstance()
@@ -100,6 +98,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
         val canvas = Canvas(tempBmp)
         canvas.drawText(message.getUser()[0].toString(), 36f, 48f, color)
 
+        var latlngArray = ArrayList<LatLng>()
         val latitude = message.getLocation()?.getLatitude()
         val longitude = message.getLocation()?.getLongitude()
         if (latitude != null && longitude != null) {
@@ -125,9 +124,19 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
         if (map != null) {
             mMap = map
 
-            println("onMapeReady")
+            println("onMapReady")
 
             retrieveLastMessages()
+
+            // TODO: Lägg till user location på rad 136 "MyLocation"
+            var userId = mFirebaseHandler.getCurrentUserId()
+            val myMarker = mMarkers[userId]
+            if(myMarker != null) {
+                val myLocation = myMarker!!.position
+                this.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 10f))
+                println(myLocation.latitude)
+                println(myLocation.longitude)
+            }
         }
     }
 
@@ -173,6 +182,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCa
                 // TODO: Remove group from list
             }
         })
+    }
+
+    private fun initiateZoomOnStart(){
+
     }
 
     @Synchronized protected fun buildGoogleApiClient(){

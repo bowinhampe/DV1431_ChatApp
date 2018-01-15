@@ -29,15 +29,6 @@
 
     </Button>
 
-    <Spinner
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="25dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/groupInteraction_activity_groupName_txtView"
-        android:id="@+id/groupInteraction_activity_functionSpinner">
-
-    </Spinner>
 
     <Button
         android:layout_width="40dp"
@@ -45,7 +36,7 @@
         android:background="@drawable/icons_globe"
         android:id="@+id/groupInteraction_activity_changeMode_btn"
         android:layout_below="@id/groupInteraction_activity_groupName_txtView"
-        android:layout_toRightOf="@id/groupInteraction_activity_functionSpinner"
+        android:layout_centerInParent="true"
         android:layout_marginLeft="15dp">
 
     </Button>
@@ -55,7 +46,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:id="@+id/groupInteraction_activity_mainFragment"
-       android:layout_below="@id/groupInteraction_activity_functionSpinner"
+       android:layout_below="@id/groupInteraction_activity_changeMode_btn"
        android:layout_marginTop="5dp">
 
    </RelativeLayout>

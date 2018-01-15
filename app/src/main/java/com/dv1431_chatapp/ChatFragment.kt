@@ -49,7 +49,6 @@ class ChatFragment:Fragment() {
             println("arg null")
         }
         val args = arguments
-        // TODO: Här är det inte bra, måste få "::name::java::simplename eller vad det heter.
         // XX::class.java.simpleName
         mGroup = args.getSerializable("mGroup") as Group?
         mUser = args.getSerializable("mUser") as User?
